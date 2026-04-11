@@ -197,7 +197,12 @@ func _on_slash_body_entered(body: Node) -> void:
 	_hit_stop(hitstop_on_hit)
 
 func _spawn_hit_spark(world_pos: Vector2) -> void:
-	var scene := get_tree().current_scene
+	if not is_inside_tree():
+		return
+	var tree := get_tree()
+	if tree == null:
+		return
+	var scene := tree.current_scene
 	if scene == null:
 		return
 	var s := Sprite2D.new()

@@ -35,6 +35,7 @@ class_name OpenClawBoss
 
 var hp := 0
 var _facing := -1
+var _dying := false
 
 var _state := "idle"
 var _t := 0.0
@@ -51,6 +52,9 @@ func _ready() -> void:
 	slam_area.body_entered.connect(_on_hitbox_body_entered)
 
 func _physics_process(delta: float) -> void:
+	if _dying:
+		_disable_hitboxes()
+		return
 	# Gravity
 	if not is_on_floor():
 		velocity.y += gravity * delta
@@ -204,10 +208,19 @@ func _on_hitbox_body_entered(body: Node) -> void:
 	player.take_hit(touch_damage, Vector2(float(dir_to_player) * 320.0, -160.0))
 
 func take_damage(amount: int, knockback: Vector2 = Vector2.ZERO) -> void:
+	if _dying:
+		return
 	hp -= amount
+	if knockback != Vector2.ZERO:
+		velocity += knockback
 	_flash(Color(2.0, 2.0, 2.0, 1.0))
 	if hp <= 0:
-		get_tree().change_scene_to_file("res://scenes/KernelEnding.tscn")
+		_dying = true
+		Engine.time_scale = 1.0
+		call_deferred("_end_game")
+
+func _end_game() -> void:
+	get_tree().change_scene_to_file("res://scenes/KernelEnding.tscn")
 
 func _flash(tint: Color) -> void:
 	var t := create_tween()

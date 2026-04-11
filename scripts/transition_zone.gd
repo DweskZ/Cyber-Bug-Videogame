@@ -7,6 +7,7 @@ class_name TransitionZone
 @onready var sprite: Sprite2D = $Sprite2D
 
 var _busy := false
+var _pending_scene := ""
 
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
@@ -36,4 +37,10 @@ func _on_body_entered(body: Node) -> void:
 		print("LOCKED: need %d packets" % required_packets)
 		return
 	_busy = true
-	get_tree().change_scene_to_file(target_scene)
+	_pending_scene = target_scene
+	call_deferred("_do_transition")
+
+func _do_transition() -> void:
+	if _pending_scene == "":
+		return
+	get_tree().change_scene_to_file(_pending_scene)
