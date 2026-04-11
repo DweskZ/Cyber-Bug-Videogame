@@ -23,10 +23,20 @@ texture = ExtResource("3")
 position = Vector2(160, 150)
 scale = Vector2(8.125, 1.25)
 
-[node name="PlatformSprite" type="Sprite2D" parent="Art"]
+[node name="PlatformSprite1" type="Sprite2D" parent="Art"]
 texture = ExtResource("3")
-position = Vector2(120, 95)
+position = Vector2(95, 118)
+scale = Vector2(1.4, 1.0)
+
+[node name="PlatformSprite2" type="Sprite2D" parent="Art"]
+texture = ExtResource("3")
+position = Vector2(210, 95)
 scale = Vector2(1.8, 1.0)
+
+[node name="PlatformSprite3" type="Sprite2D" parent="Art"]
+texture = ExtResource("3")
+position = Vector2(300, 70)
+scale = Vector2(1.6, 1.0)
 
 [node name="World" type="StaticBody2D" parent="."]
 collision_layer = 4
@@ -36,8 +46,16 @@ collision_mask = 0
 position = Vector2(160, 150)
 shape = SubResource("RectangleShape2D_1")
 
-[node name="Platform" type="CollisionShape2D" parent="World"]
-position = Vector2(120, 95)
+[node name="Platform1" type="CollisionShape2D" parent="World"]
+position = Vector2(95, 118)
+shape = SubResource("RectangleShape2D_2")
+
+[node name="Platform2" type="CollisionShape2D" parent="World"]
+position = Vector2(210, 95)
+shape = SubResource("RectangleShape2D_2")
+
+[node name="Platform3" type="CollisionShape2D" parent="World"]
+position = Vector2(300, 70)
 shape = SubResource("RectangleShape2D_2")
 
 [node name="Bounds" parent="." instance=ExtResource("7")]
@@ -45,20 +63,25 @@ shape = SubResource("RectangleShape2D_2")
 [node name="Player" parent="." instance=ExtResource("1")]
 position = Vector2(40, 120)
 
+# Combat pressure before the door
 [node name="EnemyA" parent="." instance=ExtResource("2")]
-position = Vector2(170, 120)
+position = Vector2(150, 120)
 
 [node name="EnemyB" parent="." instance=ExtResource("2")]
-position = Vector2(260, 120)
+position = Vector2(235, 120)
 
+[node name="EnemyC" parent="." instance=ExtResource("2")]
+position = Vector2(300, 40)
+
+# Packet placements force platforming
 [node name="Packet1" parent="." instance=ExtResource("4")]
-position = Vector2(90, 65)
+position = Vector2(210, 65)
 
 [node name="Packet2" parent="." instance=ExtResource("4")]
-position = Vector2(300, 120)
+position = Vector2(300, 35)
 
 [node name="ToBoss" parent="." instance=ExtResource("5")]
-position = Vector2(330, 115)
+position = Vector2(345, 115)
 target_scene = "res://scenes/BossRoom.tscn"
 required_packets = 3
 
@@ -67,7 +90,7 @@ required_packets = 3
 [node name="Hint" type="Label" parent="UI"]
 offset_left = 8.0
 offset_top = 8.0
-text = "Door requires 3 packets"
+text = "Firewall Door (needs 3 packets)"
 
 [node name="Stats" type="Label" parent="UI"]
 offset_left = 8.0
