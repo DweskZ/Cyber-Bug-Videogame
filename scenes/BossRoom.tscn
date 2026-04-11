@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/PlayerPlatformer.tscn" id="1"]
-[ext_resource type="Texture2D" path="res://assets/platform.svg" id="2"]
-[ext_resource type="Script" path="res://scripts/hud.gd" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/OpenClawBoss.tscn" id="2"]
+[ext_resource type="Texture2D" path="res://assets/platform.svg" id="3"]
+[ext_resource type="Script" path="res://scripts/hud.gd" id="4"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 size = Vector2(520, 20)
@@ -12,7 +13,7 @@ size = Vector2(520, 20)
 [node name="Art" type="Node2D" parent="."]
 
 [node name="FloorSprite" type="Sprite2D" parent="Art"]
-texture = ExtResource("2")
+texture = ExtResource("3")
 position = Vector2(160, 150)
 scale = Vector2(8.125, 1.25)
 
@@ -27,14 +28,13 @@ shape = SubResource("RectangleShape2D_1")
 [node name="Player" parent="." instance=ExtResource("1")]
 position = Vector2(60, 120)
 
-[node name="BossPlaceholder" type="Label" parent="."]
-position = Vector2(160, 80)
-text = "OPENCLAW BOSS\n(placeholder)"
+[node name="Boss" parent="." instance=ExtResource("2")]
+position = Vector2(260, 120)
 
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="Stats" type="Label" parent="UI"]
 offset_left = 8.0
 offset_top = 8.0
-script = ExtResource("3")
+script = ExtResource("4")
 text = "HP:"
