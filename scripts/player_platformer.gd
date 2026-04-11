@@ -37,6 +37,7 @@ var _inv_timer := 0.0
 var _coyote := 0.0
 var _jump_buf := 0.0
 var _hitstop_lock := false
+var _dying := false
 
 var _sprite_base_pos := Vector2.ZERO
 var _anim_t := 0.0
@@ -181,10 +182,16 @@ func _spawn_hit_spark(world_pos: Vector2) -> void:
 	t.tween_callback(Callable(s, "queue_free"))
 
 func take_hit(amount: int, knockback: Vector2 = Vector2.ZERO) -> void:
+	if _dying:
+		return
 	if _inv_timer > 0.0:
 		return
 
 	hp = max(hp - amount, 0)
+	if hp <= 0:
+		_die()
+		return
+
 	_inv_timer = invincibility_time
 
 	if knockback != Vector2.ZERO:
@@ -194,8 +201,21 @@ func take_hit(amount: int, knockback: Vector2 = Vector2.ZERO) -> void:
 	_camera_bump(2.0)
 	_hit_stop(hitstop_on_hurt)
 
-	if hp <= 0:
-		get_tree().reload_current_scene()
+func _die() -> void:
+	if _dying:
+		return
+	_dying = true
+	# Ensure we don't carry slow-motion across reload.
+	Engine.time_scale = 1.0
+	_hitstop_lock = false
+	call_deferred("_reload_scene")
+
+func _reload_scene() -> void:
+	get_tree().reload_current_scene()
+
+func _exit_tree() -> void:
+	# Safety: never leave the engine slowed down.
+	Engine.time_scale = 1.0
 
 func _flash(tint: Color) -> void:
 	if not is_instance_valid(sprite):
