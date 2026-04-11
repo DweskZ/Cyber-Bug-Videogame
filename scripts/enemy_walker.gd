@@ -1,4 +1,5 @@
 extends CharacterBody2D
+class_name EnemyWalker
 
 @export var speed := 70.0
 @export var gravity := 980.0
@@ -39,11 +40,13 @@ func _physics_process(delta: float) -> void:
 	move_and_slide()
 
 func _on_damage_area_body_entered(body: Node) -> void:
-	if body.has_method("take_hit"):
-		var dir_to_player := sign(body.global_position.x - global_position.x)
-		if dir_to_player == 0:
-			dir_to_player = -_dir
-		body.take_hit(touch_damage, Vector2(dir_to_player * touch_knockback_x, touch_knockback_y))
+	var player := body as PlayerPlatformer
+	if player == null:
+		return
+	var dir_to_player := int(sign(player.global_position.x - global_position.x))
+	if dir_to_player == 0:
+		dir_to_player = -_dir
+	player.take_hit(touch_damage, Vector2(float(dir_to_player) * touch_knockback_x, touch_knockback_y))
 
 func take_damage(amount: int, knockback: Vector2 = Vector2.ZERO) -> void:
 	hp -= amount

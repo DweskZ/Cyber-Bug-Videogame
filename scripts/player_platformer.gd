@@ -1,4 +1,5 @@
 extends CharacterBody2D
+class_name PlayerPlatformer
 
 @export var speed := 210.0
 @export var accel := 1800.0
@@ -107,9 +108,11 @@ func _attack() -> void:
 	_can_attack = true
 
 func _on_slash_body_entered(body: Node) -> void:
-	if body.has_method("take_damage"):
-		body.take_damage(damage, Vector2(_facing * 220.0, -80.0))
-		_hit_stop(hitstop_on_hit)
+	var enemy := body as EnemyWalker
+	if enemy == null:
+		return
+	enemy.take_damage(damage, Vector2(_facing * 220.0, -80.0))
+	_hit_stop(hitstop_on_hit)
 
 func take_hit(amount: int, knockback: Vector2 = Vector2.ZERO) -> void:
 	if _inv_timer > 0.0:
