@@ -10,5 +10,7 @@ func _on_body_entered(body: Node) -> void:
 	var player := body as PlayerPlatformer
 	if player == null:
 		return
-	GameManager.add_packets(amount)
+	var gm := get_tree().root.get_node_or_null("GameManager") as RunState
+	if gm != null:
+		gm.add_packets(amount)
 	queue_free()

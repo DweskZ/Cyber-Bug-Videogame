@@ -1,4 +1,5 @@
 extends Node
+class_name RunState
 
 signal packets_changed(packets: int)
 

@@ -11,8 +11,13 @@ var _busy := false
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 
+func _gm() -> RunState:
+	return get_tree().root.get_node_or_null("GameManager") as RunState
+
 func _process(_delta: float) -> void:
-	if required_packets > 0 and GameManager.packets < required_packets:
+	var gm := _gm()
+	var packets := 0 if gm == null else gm.packets
+	if required_packets > 0 and packets < required_packets:
 		sprite.modulate = Color(1, 0.5, 0.5, 1)
 	else:
 		sprite.modulate = Color(1, 1, 1, 1)
@@ -25,7 +30,9 @@ func _on_body_entered(body: Node) -> void:
 		return
 	if target_scene == "":
 		return
-	if required_packets > 0 and GameManager.packets < required_packets:
+	var gm := _gm()
+	var packets := 0 if gm == null else gm.packets
+	if required_packets > 0 and packets < required_packets:
 		print("LOCKED: need %d packets" % required_packets)
 		return
 	_busy = true

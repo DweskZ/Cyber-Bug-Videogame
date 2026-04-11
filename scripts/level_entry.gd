@@ -4,4 +4,6 @@ extends Node2D
 
 func _ready() -> void:
 	if reset_run_on_enter:
-		GameManager.reset_run()
+		var gm := get_tree().root.get_node_or_null("GameManager") as RunState
+		if gm != null:
+			gm.reset_run()
