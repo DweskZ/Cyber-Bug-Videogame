@@ -44,9 +44,9 @@ var _anim_t := 0.0
 func _ready() -> void:
 	hp = max_hp
 
-	# Player: layer 1. Collide with world (layer 3 = 4) and enemies (layer 2 = 2).
+	# Player: layer 1. Collide with world only (combat uses hitboxes).
 	collision_layer = 1
-	collision_mask = 4 | 2
+	collision_mask = 4
 
 	# Slash hitbox hits enemies only.
 	slash_hitbox.collision_layer = 0
