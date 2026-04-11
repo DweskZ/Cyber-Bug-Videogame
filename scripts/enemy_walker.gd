@@ -17,6 +17,9 @@ var hp := 0
 var _dir := -1
 var _start_x := 0.0
 
+var _sprite_base_pos := Vector2.ZERO
+var _anim_t := 0.0
+
 func _ready() -> void:
 	hp = max_hp
 	_start_x = global_position.x
@@ -28,6 +31,8 @@ func _ready() -> void:
 	damage_area.collision_mask = 1
 	damage_area.body_entered.connect(_on_damage_area_body_entered)
 
+	_sprite_base_pos = sprite.position
+
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity.y += gravity * delta
@@ -38,6 +43,14 @@ func _physics_process(delta: float) -> void:
 		_dir *= -1
 
 	move_and_slide()
+	_update_visuals(delta)
+
+func _update_visuals(delta: float) -> void:
+	_anim_t += delta
+	sprite.flip_h = _dir > 0
+	# subtle bob so it feels alive
+	var bob := sin(_anim_t * 10.0) * 0.25
+	sprite.position = _sprite_base_pos + Vector2(0, bob)
 
 func _on_damage_area_body_entered(body: Node) -> void:
 	var player := body as PlayerPlatformer

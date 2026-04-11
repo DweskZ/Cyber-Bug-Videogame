@@ -34,7 +34,7 @@ position = Vector2(160, 150)
 shape = SubResource("RectangleShape2D_1")
 
 [node name="Platform" type="CollisionShape2D" parent="World" unique_id=1499626857]
-position = Vector2(249, 56)
+position = Vector2(249, 54)
 shape = SubResource("RectangleShape2D_2")
 
 [node name="Player" parent="." unique_id=2107360345 instance=ExtResource("1")]

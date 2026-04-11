@@ -38,6 +38,9 @@ var _coyote := 0.0
 var _jump_buf := 0.0
 var _hitstop_lock := false
 
+var _sprite_base_pos := Vector2.ZERO
+var _anim_t := 0.0
+
 func _ready() -> void:
 	hp = max_hp
 
@@ -51,6 +54,8 @@ func _ready() -> void:
 	slash_shape.disabled = true
 	slash_sprite.visible = false
 	slash_hitbox.body_entered.connect(_on_slash_body_entered)
+
+	_sprite_base_pos = sprite.position
 
 func _physics_process(delta: float) -> void:
 	# Timers
@@ -92,6 +97,31 @@ func _physics_process(delta: float) -> void:
 		_attack()
 
 	move_and_slide()
+	_update_visuals(delta)
+
+func _update_visuals(delta: float) -> void:
+	# Cheap but nice-looking "animation" via transforms (no spritesheet yet)	
+	_anim_t += delta
+	sprite.flip_h = _facing < 0
+
+	if is_on_floor():
+		var run_amount := clampf(absf(velocity.x) / maxf(speed, 0.001), 0.0, 1.0)
+		if run_amount > 0.05:
+			var bob := sin(_anim_t * 18.0) * 0.6
+			sprite.position = _sprite_base_pos + Vector2(0, bob)
+			var s := 1.0 + sin(_anim_t * 18.0) * 0.04
+			sprite.scale = Vector2(s, 2.0 - s)
+		else:
+			var idle := sin(_anim_t * 2.5) * 0.25
+			sprite.position = _sprite_base_pos + Vector2(0, idle)
+			sprite.scale = Vector2.ONE
+		sprite.rotation = lerpf(sprite.rotation, 0.0, 0.2)
+	else:
+		# In air
+		sprite.position = _sprite_base_pos
+		sprite.scale = Vector2.ONE
+		var tilt := clampf(velocity.y / 900.0, -0.18, 0.18)
+		sprite.rotation = lerpf(sprite.rotation, tilt, 0.12)
 
 func _attack() -> void:
 	if not _can_attack:
