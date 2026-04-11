@@ -1,7 +1,10 @@
-[gd_scene load_steps=7 format=3]
+[gd_scene load_steps=10 format=3]
 
 [ext_resource type="Script" path="res://scripts/openclaw_boss.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/openclaw.svg" id="2"]
+[ext_resource type="Texture2D" path="res://assets/swipe_fx.svg" id="3"]
+[ext_resource type="Texture2D" path="res://assets/laser_fx.svg" id="4"]
+[ext_resource type="Texture2D" path="res://assets/slam_fx.svg" id="5"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 size = Vector2(56, 28)
@@ -33,6 +36,12 @@ monitoring = false
 shape = SubResource("RectangleShape2D_2")
 disabled = true
 
+[node name="SwipeFX" type="Sprite2D" parent="SwipeArea"]
+texture = ExtResource("3")
+visible = false
+modulate = Color(1, 1, 1, 0.9)
+z_index = 20
+
 [node name="LaserArea" type="Area2D" parent="."]
 collision_layer = 0
 collision_mask = 1
@@ -42,6 +51,12 @@ monitoring = false
 shape = SubResource("RectangleShape2D_3")
 disabled = true
 
+[node name="LaserFX" type="Sprite2D" parent="LaserArea"]
+texture = ExtResource("4")
+visible = false
+modulate = Color(1, 1, 1, 0.9)
+z_index = 20
+
 [node name="SlamArea" type="Area2D" parent="."]
 collision_layer = 0
 collision_mask = 1
@@ -50,3 +65,9 @@ monitoring = false
 [node name="CollisionShape2D" type="CollisionShape2D" parent="SlamArea"]
 shape = SubResource("CircleShape2D_1")
 disabled = true
+
+[node name="SlamFX" type="Sprite2D" parent="SlamArea"]
+texture = ExtResource("5")
+visible = false
+modulate = Color(1, 1, 1, 0.9)
+z_index = 20

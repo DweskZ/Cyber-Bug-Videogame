@@ -40,7 +40,11 @@ var _hitstop_lock := false
 var _dying := false
 
 var _sprite_base_pos := Vector2.ZERO
+var _slash_base_pos := Vector2.ZERO
 var _anim_t := 0.0
+
+var _attack_mode := 0 # 0=side, 1=down
+var _pogo_used := false
 
 func _ready() -> void:
 	hp = max_hp
@@ -57,6 +61,7 @@ func _ready() -> void:
 	slash_hitbox.body_entered.connect(_on_slash_body_entered)
 
 	_sprite_base_pos = sprite.position
+	_slash_base_pos = slash_pivot.position
 
 func _physics_process(delta: float) -> void:
 	# Timers
@@ -128,15 +133,23 @@ func _attack() -> void:
 	if not _can_attack:
 		return
 	_can_attack = false
+	_pogo_used = false
 
-	# Put slash on the correct side (don't just mirror in place)
-	slash_pivot.position.x = 14.0 * float(_facing)
-	slash_pivot.scale.x = 1.0
-	slash_sprite.flip_h = _facing < 0
+	var down_attack := (not is_on_floor()) and Input.is_action_pressed("ui_down")
+	_attack_mode = 1 if down_attack else 0
 
-	# Swing it (cheap "frames" via tween)
-	var start_rot := -0.95 * float(_facing)
-	var end_rot := 0.15 * float(_facing)
+	# Position + orientation
+	slash_pivot.scale = Vector2.ONE
+	if down_attack:
+		slash_pivot.position = Vector2(0, 18)
+		slash_sprite.flip_h = false
+	else:
+		slash_pivot.position = Vector2(14.0 * float(_facing), _slash_base_pos.y)
+		slash_sprite.flip_h = _facing < 0
+
+	# Swing tween (cheap "frames")
+	var start_rot := (1.35 if down_attack else -0.95 * float(_facing))
+	var end_rot := (2.05 if down_attack else 0.15 * float(_facing))
 	slash_sprite.rotation = start_rot
 	slash_sprite.scale = Vector2(0.9, 0.9)
 	slash_sprite.modulate.a = 0.0
@@ -152,15 +165,34 @@ func _attack() -> void:
 	slash_shape.disabled = true
 	slash_sprite.visible = false
 
+	# Restore pivot
+	slash_pivot.position = _slash_base_pos
+	_attack_mode = 0
+
 	await get_tree().create_timer(attack_cooldown).timeout
 	_can_attack = true
 
 func _on_slash_body_entered(body: Node) -> void:
-	var enemy := body as EnemyWalker
-	if enemy == null:
+	var kb := Vector2(_facing * 220.0, -80.0)
+	if _attack_mode == 1:
+		kb = Vector2(0, 260.0)
+
+	if body is EnemyWalker:
+		var enemy := body as EnemyWalker
+		enemy.take_damage(damage, kb)
+		_spawn_hit_spark(enemy.global_position + Vector2(_facing * 8.0, -10.0))
+	elif body is OpenClawBoss:
+		var boss := body as OpenClawBoss
+		boss.take_damage(damage, kb)
+		_spawn_hit_spark(boss.global_position + Vector2(_facing * 8.0, -10.0))
+	else:
 		return
-	enemy.take_damage(damage, Vector2(_facing * 220.0, -80.0))
-	_spawn_hit_spark(enemy.global_position + Vector2(_facing * 8.0, -10.0))
+
+	# Down-slash pogo bounce (HK-style)
+	if _attack_mode == 1 and not _pogo_used:
+		velocity.y = jump_velocity * 0.85
+		_pogo_used = true
+
 	_camera_bump(1.2)
 	_hit_stop(hitstop_on_hit)
 

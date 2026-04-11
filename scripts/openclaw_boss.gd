@@ -25,10 +25,13 @@ class_name OpenClawBoss
 @onready var sprite: Sprite2D = $Sprite2D
 @onready var swipe_area: Area2D = $SwipeArea
 @onready var swipe_shape: CollisionShape2D = $SwipeArea/CollisionShape2D
+@onready var swipe_fx: Sprite2D = $SwipeArea/SwipeFX
 @onready var laser_area: Area2D = $LaserArea
 @onready var laser_shape: CollisionShape2D = $LaserArea/CollisionShape2D
+@onready var laser_fx: Sprite2D = $LaserArea/LaserFX
 @onready var slam_area: Area2D = $SlamArea
 @onready var slam_shape: CollisionShape2D = $SlamArea/CollisionShape2D
+@onready var slam_fx: Sprite2D = $SlamArea/SlamFX
 
 var hp := 0
 var _facing := -1
@@ -151,20 +154,45 @@ func _disable_hitboxes() -> void:
 	laser_area.monitoring = false
 	slam_area.monitoring = false
 
+	swipe_fx.visible = false
+	laser_fx.visible = false
+	slam_fx.visible = false
+
 func _enable_swipe() -> void:
 	swipe_area.position = Vector2(40.0 * float(_facing), 0)
 	swipe_shape.disabled = false
 	swipe_area.monitoring = true
+
+	swipe_fx.visible = true
+	swipe_fx.flip_h = _facing < 0
+	swipe_fx.modulate.a = 0.0
+	swipe_fx.scale = Vector2(0.95, 0.95)
+	var t := create_tween()
+	t.tween_property(swipe_fx, "modulate:a", 0.85, 0.04)
+	t.parallel().tween_property(swipe_fx, "scale", Vector2(1.05, 1.05), swipe_active)
 
 func _enable_laser() -> void:
 	laser_area.position = Vector2(70.0 * float(_facing), -8)
 	laser_shape.disabled = false
 	laser_area.monitoring = true
 
+	laser_fx.visible = true
+	laser_fx.flip_h = _facing < 0
+	laser_fx.modulate.a = 0.0
+	var t := create_tween()
+	t.tween_property(laser_fx, "modulate:a", 0.85, 0.06)
+
 func _enable_slam() -> void:
 	slam_area.position = Vector2(0, 20)
 	slam_shape.disabled = false
 	slam_area.monitoring = true
+
+	slam_fx.visible = true
+	slam_fx.modulate.a = 0.0
+	slam_fx.scale = Vector2(0.7, 0.7)
+	var t := create_tween()
+	t.tween_property(slam_fx, "modulate:a", 0.8, 0.05)
+	t.parallel().tween_property(slam_fx, "scale", Vector2(1.25, 1.25), slam_active)
 
 func _on_hitbox_body_entered(body: Node) -> void:
 	var player := body as PlayerPlatformer
