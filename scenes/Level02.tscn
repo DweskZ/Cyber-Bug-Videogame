@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/PlayerPlatformer.tscn" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/EnemyWalker.tscn" id="2"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" path="res://scenes/Packet.tscn" id="4"]
 [ext_resource type="PackedScene" path="res://scenes/TransitionZone.tscn" id="5"]
 [ext_resource type="Script" path="res://scripts/hud.gd" id="6"]
+[ext_resource type="PackedScene" path="res://scenes/LevelBounds.tscn" id="7"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 size = Vector2(520, 20)
@@ -38,6 +39,8 @@ shape = SubResource("RectangleShape2D_1")
 [node name="Platform" type="CollisionShape2D" parent="World"]
 position = Vector2(120, 95)
 shape = SubResource("RectangleShape2D_2")
+
+[node name="Bounds" parent="." instance=ExtResource("7")]
 
 [node name="Player" parent="." instance=ExtResource("1")]
 position = Vector2(40, 120)
