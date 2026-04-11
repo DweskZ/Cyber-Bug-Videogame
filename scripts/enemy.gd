@@ -9,7 +9,7 @@ func _ready() -> void:
 	hp = max_hp
 	# Enemy on layer 2, collides with layer 1 (player)
 	collision_layer = 2
-	collision_mask = 1
+	collision_mask = 1 | 4  # player + walls
 
 func take_damage(amount: int, knockback: Vector2 = Vector2.ZERO) -> void:
 	hp -= amount

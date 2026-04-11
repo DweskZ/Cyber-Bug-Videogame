@@ -15,7 +15,7 @@ var _can_attack := true
 func _ready() -> void:
 	# Player on layer 1, collides with layer 2 (enemy)
 	collision_layer = 1
-	collision_mask = 2
+	collision_mask = 2 | 4  # enemies + walls
 
 	# Sword hitbox hits enemies (layer 2) only
 	sword_hitbox.collision_layer = 0
