@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3]
+[gd_scene load_steps=7 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/PlayerPlatformer.tscn" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/EnemyWalker.tscn" id="2"]
 [ext_resource type="Texture2D" path="res://assets/platform.svg" id="3"]
+[ext_resource type="Script" path="res://scripts/hud.gd" id="4"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 size = Vector2(520, 20)
@@ -58,3 +59,9 @@ offset_left = 8.0
 offset_top = 8.0
 text = "Left/Right + Up to jump
 Attack: Enter/Space"
+
+[node name="HPLabel" type="Label" parent="UI"]
+offset_left = 8.0
+offset_top = 44.0
+script = ExtResource("4")
+text = "HP:"
