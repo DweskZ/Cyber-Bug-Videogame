@@ -1,5 +1,4 @@
 extends Node
-class_name GameManager
 
 signal packets_changed(packets: int)
 
