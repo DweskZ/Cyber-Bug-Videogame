@@ -45,8 +45,12 @@ position = Vector2(230, 120)
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="Bg" type="ColorRect" parent="UI"]
-offset_right = 640.0
-offset_bottom = 360.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 0.0
+offset_top = 0.0
+offset_right = 0.0
+offset_bottom = 0.0
 color = Color(0.05, 0.06, 0.1, 1)
 
 [node name="Label" type="Label" parent="UI"]
