@@ -1,6 +1,8 @@
 extends CharacterBody2D
 class_name PlayerPlatformer
 
+const HIT_SPARK: Texture2D = preload("res://assets/hit_spark.svg")
+
 @export var speed := 210.0
 @export var accel := 1800.0
 @export var jump_velocity := -360.0
@@ -96,8 +98,12 @@ func _attack() -> void:
 		return
 	_can_attack = false
 
-	# Flip slash to face direction
-	slash_pivot.scale.x = _facing
+	# Put slash on the correct side (don't just mirror in place)
+	slash_pivot.position.x = 14.0 * float(_facing)
+	slash_pivot.scale.x = 1.0
+	slash_sprite.flip_h = _facing < 0
+	slash_sprite.rotation = -0.15 * float(_facing)
+
 	slash_shape.disabled = false
 	slash_sprite.visible = true
 	await get_tree().create_timer(attack_duration).timeout
@@ -112,7 +118,26 @@ func _on_slash_body_entered(body: Node) -> void:
 	if enemy == null:
 		return
 	enemy.take_damage(damage, Vector2(_facing * 220.0, -80.0))
+	_spawn_hit_spark(enemy.global_position + Vector2(_facing * 8.0, -10.0))
+	_camera_bump(1.2)
 	_hit_stop(hitstop_on_hit)
+
+func _spawn_hit_spark(world_pos: Vector2) -> void:
+	var scene := get_tree().current_scene
+	if scene == null:
+		return
+	var s := Sprite2D.new()
+	s.texture = HIT_SPARK
+	s.global_position = world_pos
+	s.scale = Vector2(0.7, 0.7)
+	s.modulate = Color(1, 1, 1, 0.95)
+	s.z_index = 50
+	scene.add_child(s)
+
+	var t := create_tween()
+	t.tween_property(s, "scale", Vector2(1.25, 1.25), 0.08)
+	t.parallel().tween_property(s, "modulate:a", 0.0, 0.08)
+	t.tween_callback(Callable(s, "queue_free"))
 
 func take_hit(amount: int, knockback: Vector2 = Vector2.ZERO) -> void:
 	if _inv_timer > 0.0:

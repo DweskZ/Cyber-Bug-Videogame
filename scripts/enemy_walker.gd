@@ -52,9 +52,15 @@ func take_damage(amount: int, knockback: Vector2 = Vector2.ZERO) -> void:
 	hp -= amount
 	if knockback != Vector2.ZERO:
 		velocity += knockback
-	_flash(Color(1, 1, 1, 1))
+	_squash()
+	_flash(Color(2.0, 2.0, 2.0, 1.0))
 	if hp <= 0:
 		queue_free()
+
+func _squash() -> void:
+	var t := create_tween()
+	t.tween_property(self, "scale", Vector2(1.12, 0.9), 0.05)
+	t.tween_property(self, "scale", Vector2.ONE, 0.10)
 
 func _flash(tint: Color) -> void:
 	if not is_instance_valid(sprite):
