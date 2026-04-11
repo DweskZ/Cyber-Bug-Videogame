@@ -1,0 +1,43 @@
+[gd_scene load_steps=5 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/PlayerPlatformer.tscn" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/EnemyWalker.tscn" id="2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
+size = Vector2(520, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2"]
+size = Vector2(140, 16)
+
+[node name="HKTestRoom" type="Node2D"]
+
+[node name="World" type="StaticBody2D" parent="."]
+collision_layer = 4
+collision_mask = 0
+
+[node name="Floor" type="CollisionShape2D" parent="World"]
+position = Vector2(160, 150)
+shape = SubResource("RectangleShape2D_1")
+
+[node name="Platform" type="CollisionShape2D" parent="World"]
+position = Vector2(250, 115)
+shape = SubResource("RectangleShape2D_2")
+
+[node name="Player" parent="." instance=ExtResource("1")]
+position = Vector2(80, 120)
+
+[node name="Enemy" parent="." instance=ExtResource("2")]
+position = Vector2(230, 120)
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Bg" type="ColorRect" parent="UI"]
+offset_right = 640.0
+offset_bottom = 360.0
+color = Color(0.05, 0.06, 0.1, 1)
+
+[node name="Label" type="Label" parent="UI"]
+offset_left = 8.0
+offset_top = 8.0
+text = "HK test: Left/Right + Up to jump
+Attack: Enter/Space"
