@@ -132,10 +132,21 @@ func _attack() -> void:
 	slash_pivot.position.x = 14.0 * float(_facing)
 	slash_pivot.scale.x = 1.0
 	slash_sprite.flip_h = _facing < 0
-	slash_sprite.rotation = -0.15 * float(_facing)
+
+	# Swing it (cheap "frames" via tween)
+	var start_rot := -0.95 * float(_facing)
+	var end_rot := 0.15 * float(_facing)
+	slash_sprite.rotation = start_rot
+	slash_sprite.scale = Vector2(0.9, 0.9)
+	slash_sprite.modulate.a = 0.0
 
 	slash_shape.disabled = false
 	slash_sprite.visible = true
+	var tw := create_tween()
+	tw.tween_property(slash_sprite, "modulate:a", 0.95, 0.03)
+	tw.parallel().tween_property(slash_sprite, "scale", Vector2(1.08, 1.08), attack_duration)
+	tw.parallel().tween_property(slash_sprite, "rotation", end_rot, attack_duration).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+
 	await get_tree().create_timer(attack_duration).timeout
 	slash_shape.disabled = true
 	slash_sprite.visible = false
