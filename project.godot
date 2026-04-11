@@ -13,7 +13,11 @@ config_version=5
 config/name="Meetup"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
-run/main_scene="res://scenes/HKTestRoom.tscn"
+run/main_scene="res://scenes/Level01.tscn"
+
+[autoload]
+
+GameManager="*res://scripts/game_manager.gd"
 
 [physics]
 
