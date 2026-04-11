@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/Player.tscn" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/Enemy.tscn" id="2"]
+
+[node name="Main" type="Node2D"]
+
+[node name="Player" parent="." instance=ExtResource("1")]
+position = Vector2(80, 90)
+
+[node name="Enemy" parent="." instance=ExtResource("2")]
+position = Vector2(180, 90)
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="Bg" type="ColorRect" parent="UI"]
+offset_right = 320.0
+offset_bottom = 180.0
+color = Color(0.08, 0.08, 0.1, 1)
+
+[node name="Label" type="Label" parent="UI"]
+offset_left = 8.0
+offset_top = 8.0
+text = "Move: arrows
+Attack: Enter/Space"
