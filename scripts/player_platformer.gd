@@ -62,7 +62,7 @@ func _ready() -> void:
 
 	# Player: layer 1. Collide with world only (combat uses hitboxes).
 	collision_layer = 1
-	collision_mask = 4
+	collision_mask = 1
 
 	# Slash hitbox hits enemies only.
 	slash_hitbox.collision_layer = 0

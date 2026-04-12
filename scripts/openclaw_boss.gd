@@ -53,7 +53,7 @@ var _t := 0.0
 func _ready() -> void:
 	hp = max_hp
 	collision_layer = 2
-	collision_mask = 4
+	collision_mask = 1
 	_setup_spriteframes()
 
 	_disable_hitboxes()

@@ -51,7 +51,7 @@ func _ready() -> void:
 
 	# Enemy: layer 2. Collide with world only. Damage is via DamageArea.
 	collision_layer = 2
-	collision_mask = 4
+	collision_mask = 1
 
 	damage_area.collision_layer = 0
 	damage_area.collision_mask = 1
