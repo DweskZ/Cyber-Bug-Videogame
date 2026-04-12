@@ -4,10 +4,10 @@ class_name PlayerPlatformer
 const SPRITESHEET_ANIM := preload("res://scripts/spritesheet_anim.gd")
 
 const HIT_SPARK: Texture2D = preload("res://assets/hit_spark.svg")
-const SHEET_IDLE: Texture2D = preload("res://assets/spritesheets/player_idle.png")
-const SHEET_RUN: Texture2D = preload("res://assets/spritesheets/player_run.png")
-const SHEET_ATTACK: Texture2D = preload("res://assets/spritesheets/player_attack.png")
-const SHEET_DOWN_ATTACK: Texture2D = preload("res://assets/spritesheets/player_down_attack.png")
+const SHEET_IDLE: Texture2D = preload("res://assets/gemini_generated/characters/player/player_idle.png")
+const SHEET_RUN: Texture2D = preload("res://assets/gemini_generated/characters/player/player_run.png")
+const SHEET_ATTACK: Texture2D = preload("res://assets/gemini_generated/characters/player/player_attack.png")
+const SHEET_DOWN_ATTACK: Texture2D = preload("res://assets/gemini_generated/characters/player/player_attack.png")
 
 const PLAYER_FRAME_W := 128
 const PLAYER_FRAME_H := 128
@@ -141,8 +141,8 @@ func _setup_spriteframes() -> void:
 	var frames := SpriteFrames.new()
 	SPRITESHEET_ANIM.add_strip(frames, "idle", SHEET_IDLE, PLAYER_FRAME_W, PLAYER_FRAME_H, 4, 8.0, true)
 	SPRITESHEET_ANIM.add_strip(frames, "run", SHEET_RUN, PLAYER_FRAME_W, PLAYER_FRAME_H, 6, 12.0, true)
-	SPRITESHEET_ANIM.add_strip(frames, "attack", SHEET_ATTACK, PLAYER_FRAME_W, PLAYER_FRAME_H, 4, 20.0, false)
-	SPRITESHEET_ANIM.add_strip(frames, "down_attack", SHEET_DOWN_ATTACK, PLAYER_FRAME_W, PLAYER_FRAME_H, 4, 20.0, false)
+	SPRITESHEET_ANIM.add_strip(frames, "attack", SHEET_ATTACK, PLAYER_FRAME_W, PLAYER_FRAME_H, 6, 20.0, false)
+	SPRITESHEET_ANIM.add_strip(frames, "down_attack", SHEET_DOWN_ATTACK, PLAYER_FRAME_W, PLAYER_FRAME_H, 6, 20.0, false)
 	sprite.sprite_frames = frames
 	sprite.play("idle")
 
