@@ -24,7 +24,7 @@ texture = ExtResource("3")
 scale = Vector2(1, 1)
 texture_repeat = 1
 region_enabled = true
-region_rect = Rect2(0, 0, 520, 64)
+region_rect = Rect2(0, 0, 520, 20)
 
 [node name="PlatformSprite" type="Sprite2D" parent="Art" unique_id=110030204]
 position = Vector2(249, 54)
@@ -32,7 +32,7 @@ texture = ExtResource("3")
 scale = Vector2(1, 1)
 texture_repeat = 1
 region_enabled = true
-region_rect = Rect2(0, 0, 140, 48)
+region_rect = Rect2(0, 0, 140, 16)
 
 [node name="World" type="StaticBody2D" parent="." unique_id=98771688]
 collision_layer = 1

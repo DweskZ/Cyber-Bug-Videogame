@@ -1,6 +1,7 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/killzone.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/platform_tex.png" id="2"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 size = Vector2(20, 320)
@@ -12,6 +13,22 @@ size = Vector2(20, 320)
 size = Vector2(1200, 220)
 
 [node name="LevelBounds" type="Node2D"]
+
+[node name="Art" type="Node2D" parent="."]
+
+[node name="LeftWallSprite" type="Sprite2D" parent="Art"]
+texture = ExtResource("2")
+position = Vector2(-90, 60)
+texture_repeat = 1
+region_enabled = true
+region_rect = Rect2(0, 0, 20, 320)
+
+[node name="RightWallSprite" type="Sprite2D" parent="Art"]
+texture = ExtResource("2")
+position = Vector2(410, 60)
+texture_repeat = 1
+region_enabled = true
+region_rect = Rect2(0, 0, 20, 320)
 
 [node name="Walls" type="StaticBody2D" parent="."]
 collision_layer = 1

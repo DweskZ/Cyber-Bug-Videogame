@@ -27,7 +27,7 @@ texture = ExtResource("3")
 scale = Vector2(1, 1)
 texture_repeat = 1
 region_enabled = true
-region_rect = Rect2(0, 0, 520, 64)
+region_rect = Rect2(0, 0, 520, 20)
 
 [node name="PlatformSprite1" type="Sprite2D" parent="Art" unique_id=2133122354]
 position = Vector2(95, 118)
@@ -35,7 +35,7 @@ texture = ExtResource("3")
 scale = Vector2(1, 1)
 texture_repeat = 1
 region_enabled = true
-region_rect = Rect2(0, 0, 140, 48)
+region_rect = Rect2(0, 0, 140, 16)
 
 [node name="PlatformSprite2" type="Sprite2D" parent="Art" unique_id=1102274320]
 position = Vector2(210, 95)
@@ -43,7 +43,7 @@ texture = ExtResource("3")
 scale = Vector2(1, 1)
 texture_repeat = 1
 region_enabled = true
-region_rect = Rect2(0, 0, 140, 48)
+region_rect = Rect2(0, 0, 140, 16)
 
 [node name="PlatformSprite3" type="Sprite2D" parent="Art" unique_id=2003700700]
 position = Vector2(300, 70)
@@ -51,7 +51,7 @@ texture = ExtResource("3")
 scale = Vector2(1, 1)
 texture_repeat = 1
 region_enabled = true
-region_rect = Rect2(0, 0, 140, 48)
+region_rect = Rect2(0, 0, 140, 16)
 
 [node name="World" type="StaticBody2D" parent="." unique_id=1516907722]
 collision_layer = 1
