@@ -20,13 +20,19 @@ size = Vector2(140, 16)
 
 [node name="FloorSprite" type="Sprite2D" parent="Art" unique_id=1338309870]
 position = Vector2(160, 150)
-scale = Vector2(8.125, 1.25)
 texture = ExtResource("3")
+scale = Vector2(1, 1)
+texture_repeat = 1
+region_enabled = true
+region_rect = Rect2(0, 0, 520, 64)
 
 [node name="PlatformSprite" type="Sprite2D" parent="Art" unique_id=110030204]
 position = Vector2(249, 54)
-scale = Vector2(2.1875, 1)
 texture = ExtResource("3")
+scale = Vector2(1, 1)
+texture_repeat = 1
+region_enabled = true
+region_rect = Rect2(0, 0, 140, 48)
 
 [node name="World" type="StaticBody2D" parent="." unique_id=98771688]
 collision_layer = 1
