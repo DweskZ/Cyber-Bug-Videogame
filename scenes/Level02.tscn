@@ -17,7 +17,7 @@ size = Vector2(140, 16)
 
 [node name="Level02" type="Node2D" unique_id=2061334440]
 
-[node name="BG" parent="." instance=ExtResource("8")]
+[node name="BG" parent="." unique_id=724870920 instance=ExtResource("8")]
 
 [node name="Art" type="Node2D" parent="." unique_id=442452453]
 
