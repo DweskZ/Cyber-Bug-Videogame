@@ -40,7 +40,7 @@ texture = ExtResource("3")
 
 [node name="World" type="StaticBody2D" parent="." unique_id=1516907722]
 collision_layer = 1
-collision_mask = 0
+collision_mask = 1
 
 [node name="Floor" type="CollisionShape2D" parent="World" unique_id=236191180]
 position = Vector2(160, 150)
