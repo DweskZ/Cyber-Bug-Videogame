@@ -1,8 +1,8 @@
 extends Node2D
 
-@export var far_factor: float = 0.15
-@export var mid_factor: float = 0.35
-@export var cover_margin: float = 1.10
+@export var far_factor: float = 0.85
+@export var mid_factor: float = 0.95
+@export var cover_margin: float = 1.35
 
 @onready var far: Sprite2D = $Far
 @onready var mid: Sprite2D = $Mid
