@@ -159,7 +159,8 @@ func take_damage(amount: int, knockback: Vector2 = Vector2.ZERO) -> void:
 	_squash()
 	_flash(Color(2.0, 2.0, 2.0, 1.0))
 	if hp <= 0:
-		queue_free()
+		# This is often called from physics callbacks (slash hitbox). Defer removal.
+		call_deferred("queue_free")
 
 func _squash() -> void:
 	var t := create_tween()
