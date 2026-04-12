@@ -1,6 +1,15 @@
 extends CharacterBody2D
 class_name EnemyWalker
 
+const SPRITESHEET_ANIM := preload("res://scripts/spritesheet_anim.gd")
+
+const SHEET_IDLE: Texture2D = preload("res://assets/spritesheets/enemy_idle.png")
+const SHEET_RUN: Texture2D = preload("res://assets/spritesheets/enemy_run.png")
+const SHEET_ATTACK: Texture2D = preload("res://assets/spritesheets/enemy_attack.png")
+
+const ENEMY_FRAME_W := 128
+const ENEMY_FRAME_H := 128
+
 @export var gravity := 980.0
 @export var max_hp := 3
 
@@ -20,7 +29,7 @@ class_name EnemyWalker
 @export var touch_knockback_x := 260.0
 @export var touch_knockback_y := -140.0
 
-@onready var sprite: Sprite2D = $Sprite2D
+@onready var sprite: AnimatedSprite2D = $Sprite2D
 @onready var damage_area: Area2D = $DamageArea
 
 var hp := 0
@@ -38,6 +47,7 @@ var _attack_dir := 1
 func _ready() -> void:
 	hp = max_hp
 	_start_x = global_position.x
+	_setup_spriteframes()
 
 	# Enemy: layer 2. Collide with world only. Damage is via DamageArea.
 	collision_layer = 2
@@ -114,9 +124,23 @@ func _physics_process(delta: float) -> void:
 func _update_visuals(delta: float) -> void:
 	_anim_t += delta
 	sprite.flip_h = _dir > 0
-	# subtle bob so it feels alive
-	var bob := sin(_anim_t * 10.0) * 0.25
-	sprite.position = _sprite_base_pos + Vector2(0, bob)
+	sprite.position = _sprite_base_pos
+
+	var desired := "idle"
+	if _attack_phase != 0:
+		desired = "attack"
+	elif absf(velocity.x) > 1.0:
+		desired = "run"
+	if sprite.animation != desired:
+		sprite.play(desired)
+
+func _setup_spriteframes() -> void:
+	var frames := SpriteFrames.new()
+	SPRITESHEET_ANIM.add_strip(frames, "idle", SHEET_IDLE, ENEMY_FRAME_W, ENEMY_FRAME_H, 4, 8.0, true)
+	SPRITESHEET_ANIM.add_strip(frames, "run", SHEET_RUN, ENEMY_FRAME_W, ENEMY_FRAME_H, 6, 12.0, true)
+	SPRITESHEET_ANIM.add_strip(frames, "attack", SHEET_ATTACK, ENEMY_FRAME_W, ENEMY_FRAME_H, 6, 18.0, true)
+	sprite.sprite_frames = frames
+	sprite.play("idle")
 
 func _on_damage_area_body_entered(body: Node) -> void:
 	# Only active during attack (monitoring=true)

@@ -1,7 +1,16 @@
 extends CharacterBody2D
 class_name PlayerPlatformer
 
+const SPRITESHEET_ANIM := preload("res://scripts/spritesheet_anim.gd")
+
 const HIT_SPARK: Texture2D = preload("res://assets/hit_spark.svg")
+const SHEET_IDLE: Texture2D = preload("res://assets/spritesheets/player_idle.png")
+const SHEET_RUN: Texture2D = preload("res://assets/spritesheets/player_run.png")
+const SHEET_ATTACK: Texture2D = preload("res://assets/spritesheets/player_attack.png")
+const SHEET_DOWN_ATTACK: Texture2D = preload("res://assets/spritesheets/player_down_attack.png")
+
+const PLAYER_FRAME_W := 128
+const PLAYER_FRAME_H := 128
 
 @export var speed := 210.0
 @export var accel := 1800.0
@@ -22,7 +31,7 @@ const HIT_SPARK: Texture2D = preload("res://assets/hit_spark.svg")
 @export var hitstop_on_hit := 0.035
 @export var hitstop_on_hurt := 0.06
 
-@onready var sprite: Sprite2D = $Sprite2D
+@onready var sprite: AnimatedSprite2D = $Sprite2D
 @onready var cam: Camera2D = $Camera2D
 @onready var slash_pivot: Node2D = $SlashPivot
 @onready var slash_hitbox: Area2D = $SlashPivot/SlashHitbox
@@ -45,9 +54,11 @@ var _anim_t := 0.0
 
 var _attack_mode := 0 # 0=side, 1=down
 var _pogo_used := false
+var _is_attacking := false
 
 func _ready() -> void:
 	hp = max_hp
+	_setup_spriteframes()
 
 	# Player: layer 1. Collide with world only (combat uses hitboxes).
 	collision_layer = 1
@@ -62,6 +73,9 @@ func _ready() -> void:
 
 	_sprite_base_pos = sprite.position
 	_slash_base_pos = slash_pivot.position
+	sprite.position = _sprite_base_pos
+	sprite.rotation = 0.0
+	sprite.scale = Vector2.ONE
 
 func _physics_process(delta: float) -> void:
 	# Timers
@@ -106,37 +120,47 @@ func _physics_process(delta: float) -> void:
 	_update_visuals(delta)
 
 func _update_visuals(delta: float) -> void:
-	# Cheap but nice-looking "animation" via transforms (no spritesheet yet)	
 	_anim_t += delta
 	sprite.flip_h = _facing < 0
+	# Keep transforms stable now that we use real frames.
+	sprite.position = _sprite_base_pos
+	sprite.scale = Vector2.ONE
+	sprite.rotation = 0.0
 
-	if is_on_floor():
-		var run_amount := clampf(absf(velocity.x) / maxf(speed, 0.001), 0.0, 1.0)
-		if run_amount > 0.05:
-			var bob := sin(_anim_t * 18.0) * 0.6
-			sprite.position = _sprite_base_pos + Vector2(0, bob)
-			var s := 1.0 + sin(_anim_t * 18.0) * 0.04
-			sprite.scale = Vector2(s, 2.0 - s)
-		else:
-			var idle := sin(_anim_t * 2.5) * 0.25
-			sprite.position = _sprite_base_pos + Vector2(0, idle)
-			sprite.scale = Vector2.ONE
-		sprite.rotation = lerpf(sprite.rotation, 0.0, 0.2)
-	else:
-		# In air
-		sprite.position = _sprite_base_pos
-		sprite.scale = Vector2.ONE
-		var tilt := clampf(velocity.y / 900.0, -0.18, 0.18)
-		sprite.rotation = lerpf(sprite.rotation, tilt, 0.12)
+	# Animation selection
+	if _is_attacking:
+		return
+	var desired := "idle"
+	if is_on_floor() and absf(velocity.x) > 10.0:
+		desired = "run"
+	if sprite.animation != desired:
+		sprite.play(desired)
+
+func _setup_spriteframes() -> void:
+	# Build SpriteFrames from baked horizontal strips.
+	var frames := SpriteFrames.new()
+	SPRITESHEET_ANIM.add_strip(frames, "idle", SHEET_IDLE, PLAYER_FRAME_W, PLAYER_FRAME_H, 4, 8.0, true)
+	SPRITESHEET_ANIM.add_strip(frames, "run", SHEET_RUN, PLAYER_FRAME_W, PLAYER_FRAME_H, 6, 12.0, true)
+	SPRITESHEET_ANIM.add_strip(frames, "attack", SHEET_ATTACK, PLAYER_FRAME_W, PLAYER_FRAME_H, 4, 20.0, false)
+	SPRITESHEET_ANIM.add_strip(frames, "down_attack", SHEET_DOWN_ATTACK, PLAYER_FRAME_W, PLAYER_FRAME_H, 4, 20.0, false)
+	sprite.sprite_frames = frames
+	sprite.play("idle")
 
 func _attack() -> void:
 	if not _can_attack:
 		return
 	_can_attack = false
 	_pogo_used = false
+	_is_attacking = true
 
 	var down_attack := (not is_on_floor()) and Input.is_action_pressed("ui_down")
 	_attack_mode = 1 if down_attack else 0
+	if down_attack:
+		if sprite.animation != "down_attack":
+			sprite.play("down_attack")
+	else:
+		if sprite.animation != "attack":
+			sprite.play("attack")
 
 	# Position + orientation
 	slash_pivot.scale = Vector2.ONE
@@ -166,6 +190,7 @@ func _attack() -> void:
 	# Restore pivot
 	slash_pivot.position = _slash_base_pos
 	_attack_mode = 0
+	_is_attacking = false
 
 	await get_tree().create_timer(attack_cooldown).timeout
 	_can_attack = true

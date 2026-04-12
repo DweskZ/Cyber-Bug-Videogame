@@ -1,6 +1,16 @@
 extends CharacterBody2D
 class_name OpenClawBoss
 
+const SPRITESHEET_ANIM := preload("res://scripts/spritesheet_anim.gd")
+
+const SHEET_IDLE: Texture2D = preload("res://assets/spritesheets/boss_idle.png")
+const SHEET_SWIPE: Texture2D = preload("res://assets/spritesheets/boss_swipe.png")
+const SHEET_LASER: Texture2D = preload("res://assets/spritesheets/boss_laser.png")
+const SHEET_SLAM: Texture2D = preload("res://assets/spritesheets/boss_slam.png")
+
+const BOSS_FRAME_W := 256
+const BOSS_FRAME_H := 192
+
 @export var gravity := 980.0
 @export var max_hp := 25
 @export var move_speed := 70.0
@@ -22,7 +32,7 @@ class_name OpenClawBoss
 @export var slam_active := 0.18
 @export var slam_cooldown := 0.90
 
-@onready var sprite: Sprite2D = $Sprite2D
+@onready var sprite: AnimatedSprite2D = $Sprite2D
 @onready var swipe_area: Area2D = $SwipeArea
 @onready var swipe_shape: CollisionShape2D = $SwipeArea/CollisionShape2D
 @onready var swipe_fx: Sprite2D = $SwipeArea/SwipeFX
@@ -44,6 +54,7 @@ func _ready() -> void:
 	hp = max_hp
 	collision_layer = 2
 	collision_mask = 4
+	_setup_spriteframes()
 
 	_disable_hitboxes()
 
@@ -65,6 +76,17 @@ func _physics_process(delta: float) -> void:
 		if _facing == 0:
 			_facing = -1
 		sprite.flip_h = _facing > 0
+
+	# Boss animation based on state
+	var desired_anim := "idle"
+	if _state.begins_with("swipe"):
+		desired_anim = "swipe"
+	elif _state.begins_with("laser"):
+		desired_anim = "laser"
+	elif _state.begins_with("slam"):
+		desired_anim = "slam"
+	if sprite.animation != desired_anim:
+		sprite.play(desired_anim)
 
 	# State machine
 	if _state == "idle":
@@ -130,6 +152,15 @@ func _physics_process(delta: float) -> void:
 				_end_attack(slam_cooldown)
 
 	move_and_slide()
+
+func _setup_spriteframes() -> void:
+	var frames := SpriteFrames.new()
+	SPRITESHEET_ANIM.add_strip(frames, "idle", SHEET_IDLE, BOSS_FRAME_W, BOSS_FRAME_H, 4, 6.0, true)
+	SPRITESHEET_ANIM.add_strip(frames, "swipe", SHEET_SWIPE, BOSS_FRAME_W, BOSS_FRAME_H, 4, 10.0, true)
+	SPRITESHEET_ANIM.add_strip(frames, "laser", SHEET_LASER, BOSS_FRAME_W, BOSS_FRAME_H, 4, 8.0, true)
+	SPRITESHEET_ANIM.add_strip(frames, "slam", SHEET_SLAM, BOSS_FRAME_W, BOSS_FRAME_H, 4, 10.0, true)
+	sprite.sprite_frames = frames
+	sprite.play("idle")
 
 func _start_attack(kind: String, windup: float) -> void:
 	scale = Vector2.ONE
