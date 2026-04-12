@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" path="res://scenes/PlayerPlatformer.tscn" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/OpenClawBoss.tscn" id="2"]
-[ext_resource type="Texture2D" path="res://assets/platform.svg" id="3"]
+[ext_resource type="Texture2D" path="res://assets/platform_tex.png" id="3"]
 [ext_resource type="Script" path="res://scripts/hud.gd" id="4"]
 [ext_resource type="PackedScene" path="res://scenes/LevelBounds.tscn" id="5"]
 [ext_resource type="PackedScene" path="res://scenes/Background.tscn" id="6"]
