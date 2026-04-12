@@ -3,11 +3,12 @@
 [ext_resource type="Script" uid="uid://dy7frprvtj7dh" path="res://scripts/level_entry.gd" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/PlayerPlatformer.tscn" id="2"]
 [ext_resource type="PackedScene" path="res://scenes/Background.tscn" id="3"]
-[ext_resource type="Texture2D" path="res://assets/platform_tex.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://mpekglew50gr" path="res://assets/platform_tex.png" id="4"]
 [ext_resource type="PackedScene" path="res://scenes/Packet.tscn" id="5"]
 [ext_resource type="PackedScene" path="res://scenes/TransitionZone.tscn" id="6"]
 [ext_resource type="Script" uid="uid://d0k0jatf84o1" path="res://scripts/hud.gd" id="7"]
 [ext_resource type="PackedScene" path="res://scenes/LevelBounds.tscn" id="8"]
+[ext_resource type="PackedScene" path="res://scenes/EnemyWalker.tscn" id="9"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 size = Vector2(520, 20)
@@ -18,7 +19,7 @@ size = Vector2(140, 16)
 [node name="Level01" type="Node2D" unique_id=1817989543]
 script = ExtResource("1")
 
-[node name="BG" parent="." instance=ExtResource("3")]
+[node name="BG" parent="." unique_id=1514472680 instance=ExtResource("3")]
 
 [node name="Art" type="Node2D" parent="." unique_id=44328319]
 
@@ -65,8 +66,13 @@ shape = SubResource("RectangleShape2D_2")
 [node name="Bounds" parent="." unique_id=175198438 instance=ExtResource("8")]
 
 [node name="Player" parent="." unique_id=1587195847 instance=ExtResource("2")]
-position = Vector2(-2, 98)
-collision_mask = 1
+position = Vector2(60, 120)
+
+[node name="EnemyA" parent="." instance=ExtResource("9")]
+position = Vector2(165, 120)
+
+[node name="EnemyB" parent="." instance=ExtResource("9")]
+position = Vector2(305, 55)
 
 [node name="Packet1" parent="." unique_id=176199604 instance=ExtResource("5")]
 position = Vector2(115, 120)

@@ -6,3 +6,7 @@
 # macOS
 .DS_Store
 **/.DS_Store
+
+# Godot UID files (can be regenerated)
+*.uid
+**/*.uid
