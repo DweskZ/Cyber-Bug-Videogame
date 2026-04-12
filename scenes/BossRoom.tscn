@@ -1,10 +1,11 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=12 format=3]
 
 [ext_resource type="PackedScene" path="res://scenes/PlayerPlatformer.tscn" id="1"]
 [ext_resource type="PackedScene" path="res://scenes/OpenClawBoss.tscn" id="2"]
 [ext_resource type="Texture2D" path="res://assets/platform.svg" id="3"]
 [ext_resource type="Script" path="res://scripts/hud.gd" id="4"]
 [ext_resource type="PackedScene" path="res://scenes/LevelBounds.tscn" id="5"]
+[ext_resource type="PackedScene" path="res://scenes/Background.tscn" id="6"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 size = Vector2(520, 20)
@@ -19,6 +20,8 @@ size = Vector2(160, 16)
 size = Vector2(120, 16)
 
 [node name="BossRoom" type="Node2D"]
+
+[node name="BG" parent="." instance=ExtResource("6")]
 
 [node name="Art" type="Node2D" parent="."]
 

@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" path="res://scenes/EnemyWalker.tscn" id="2"]
 [ext_resource type="Texture2D" uid="uid://cabrh33tmfmb" path="res://assets/platform.svg" id="3"]
 [ext_resource type="Script" uid="uid://d0k0jatf84o1" path="res://scripts/hud.gd" id="4"]
+[ext_resource type="PackedScene" path="res://scenes/Background.tscn" id="5"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 size = Vector2(520, 20)
@@ -12,6 +13,8 @@ size = Vector2(520, 20)
 size = Vector2(140, 16)
 
 [node name="HKTestRoom" type="Node2D" unique_id=1169450562]
+
+[node name="BG" parent="." instance=ExtResource("5")]
 
 [node name="Art" type="Node2D" parent="." unique_id=64630310]
 

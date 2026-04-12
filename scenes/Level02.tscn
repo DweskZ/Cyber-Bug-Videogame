@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" path="res://scenes/TransitionZone.tscn" id="5"]
 [ext_resource type="Script" uid="uid://d0k0jatf84o1" path="res://scripts/hud.gd" id="6"]
 [ext_resource type="PackedScene" path="res://scenes/LevelBounds.tscn" id="7"]
+[ext_resource type="PackedScene" path="res://scenes/Background.tscn" id="8"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
 size = Vector2(520, 20)
@@ -15,6 +16,8 @@ size = Vector2(520, 20)
 size = Vector2(140, 16)
 
 [node name="Level02" type="Node2D" unique_id=2061334440]
+
+[node name="BG" parent="." instance=ExtResource("8")]
 
 [node name="Art" type="Node2D" parent="." unique_id=442452453]
 

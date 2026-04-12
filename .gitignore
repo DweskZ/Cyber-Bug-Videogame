@@ -2,3 +2,7 @@
 .godot/
 .godot.bak*/
 /android/
+
+# macOS
+.DS_Store
+**/.DS_Store
