@@ -12,6 +12,9 @@ const SHEET_DOWN_ATTACK: Texture2D = preload("res://assets/gemini_generated/char
 const PLAYER_FRAME_W := 128
 const PLAYER_FRAME_H := 128
 
+# Visual tuning (the generated sheets are 128x128 frames, so we scale them down).
+@export var visual_scale := 0.25
+
 @export var speed := 210.0
 @export var accel := 1800.0
 @export var jump_velocity := -360.0
@@ -75,7 +78,7 @@ func _ready() -> void:
 	_slash_base_pos = slash_pivot.position
 	sprite.position = _sprite_base_pos
 	sprite.rotation = 0.0
-	sprite.scale = Vector2.ONE
+	sprite.scale = Vector2.ONE * visual_scale
 
 func _physics_process(delta: float) -> void:
 	# Timers
@@ -124,7 +127,7 @@ func _update_visuals(delta: float) -> void:
 	sprite.flip_h = _facing < 0
 	# Keep transforms stable now that we use real frames.
 	sprite.position = _sprite_base_pos
-	sprite.scale = Vector2.ONE
+	sprite.scale = Vector2.ONE * visual_scale
 	sprite.rotation = 0.0
 
 	# Animation selection
