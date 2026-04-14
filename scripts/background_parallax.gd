@@ -35,15 +35,10 @@ func _process(_delta: float) -> void:
 	var cam_pos: Vector2 = _cam.global_position
 	var delta: Vector2 = cam_pos - _cam_start
 
-	# Parallax mostly in X. Lock Y so the background doesn't bob when the player jumps.
-	var far_pos: Vector2 = cam_pos + delta * (far_factor - 1.0)
-	far_pos.y = _cam_start.y
-	far.global_position = far_pos
-
-	# Mid layer: parallax mainly in X, and anchor its bottom to the ground line.
-	var mid_pos: Vector2 = cam_pos + delta * (mid_factor - 1.0)
-	mid_pos.y = ground_y - _mid_half_h
-	mid.global_position = mid_pos
+	# Fixed background: lock to camera so it doesn't parallax or bob.
+	far.global_position = cam_pos
+	# Mid layer is optional; keep it locked too (and it can stay invisible).
+	mid.global_position = cam_pos
 
 func _fit_to_view() -> void:
 	if far.texture == null:
