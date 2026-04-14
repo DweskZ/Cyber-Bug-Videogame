@@ -6,6 +6,7 @@ const SPRITESHEET_ANIM := preload("res://scripts/spritesheet_anim.gd")
 const HIT_SPARK: Texture2D = preload("res://assets/hit_spark.svg")
 const SHEET_IDLE: Texture2D = preload("res://assets/gemini_generated/characters/player/player_idle.png")
 const SHEET_RUN: Texture2D = preload("res://assets/gemini_generated/characters/player/player_run.png")
+const SHEET_JUMP: Texture2D = preload("res://assets/gemini_generated/characters/player/player_jump.png")
 const SHEET_ATTACK: Texture2D = preload("res://assets/gemini_generated/characters/player/player_attack.png")
 const SHEET_DOWN_ATTACK: Texture2D = preload("res://assets/gemini_generated/characters/player/player_down_attack.png")
 
@@ -134,7 +135,9 @@ func _update_visuals(delta: float) -> void:
 	if _is_attacking:
 		return
 	var desired := "idle"
-	if is_on_floor() and absf(velocity.x) > 10.0:
+	if not is_on_floor():
+		desired = "jump"
+	elif absf(velocity.x) > 10.0:
 		desired = "run"
 	if sprite.animation != desired:
 		sprite.play(desired)
@@ -144,6 +147,7 @@ func _setup_spriteframes() -> void:
 	var frames := SpriteFrames.new()
 	SPRITESHEET_ANIM.add_strip(frames, "idle", SHEET_IDLE, PLAYER_FRAME_W, PLAYER_FRAME_H, 4, 8.0, true)
 	SPRITESHEET_ANIM.add_strip(frames, "run", SHEET_RUN, PLAYER_FRAME_W, PLAYER_FRAME_H, 6, 12.0, true)
+	SPRITESHEET_ANIM.add_strip(frames, "jump", SHEET_JUMP, PLAYER_FRAME_W, PLAYER_FRAME_H, 4, 10.0, true)
 	SPRITESHEET_ANIM.add_strip(frames, "attack", SHEET_ATTACK, PLAYER_FRAME_W, PLAYER_FRAME_H, 6, 20.0, false)
 	SPRITESHEET_ANIM.add_strip(frames, "down_attack", SHEET_DOWN_ATTACK, PLAYER_FRAME_W, PLAYER_FRAME_H, 4, 18.0, false)
 	sprite.sprite_frames = frames
