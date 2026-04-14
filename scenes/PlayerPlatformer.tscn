@@ -24,7 +24,10 @@ position = Vector2(0, -6)
 shape = SubResource("RectangleShape2D_1")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-zoom = Vector2(3.5, 3.5)
+# Bigger zoom = character/world appear larger on screen.
+zoom = Vector2(5, 5)
+position_smoothing_enabled = true
+position_smoothing_speed = 10.0
 current = true
 
 [node name="SlashPivot" type="Node2D" parent="."]
