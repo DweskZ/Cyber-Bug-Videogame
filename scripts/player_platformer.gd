@@ -29,8 +29,8 @@ const PLAYER_FRAME_H := 128
 @export var invincibility_time := 0.60
 
 @export var damage := 1
-@export var attack_duration := 0.10
-@export var attack_cooldown := 0.18
+@export var attack_duration := 0.14
+@export var attack_cooldown := 0.20
 
 @export var hitstop_on_hit := 0.035
 @export var hitstop_on_hurt := 0.06
@@ -148,8 +148,8 @@ func _setup_spriteframes() -> void:
 	SPRITESHEET_ANIM.add_strip(frames, "idle", SHEET_IDLE, PLAYER_FRAME_W, PLAYER_FRAME_H, 4, 8.0, true)
 	SPRITESHEET_ANIM.add_strip(frames, "run", SHEET_RUN, PLAYER_FRAME_W, PLAYER_FRAME_H, 6, 12.0, true)
 	SPRITESHEET_ANIM.add_strip(frames, "jump", SHEET_JUMP, PLAYER_FRAME_W, PLAYER_FRAME_H, 4, 10.0, true)
-	SPRITESHEET_ANIM.add_strip(frames, "attack", SHEET_ATTACK, PLAYER_FRAME_W, PLAYER_FRAME_H, 6, 20.0, false)
-	SPRITESHEET_ANIM.add_strip(frames, "down_attack", SHEET_DOWN_ATTACK, PLAYER_FRAME_W, PLAYER_FRAME_H, 4, 18.0, false)
+	SPRITESHEET_ANIM.add_strip(frames, "attack", SHEET_ATTACK, PLAYER_FRAME_W, PLAYER_FRAME_H, 6, 14.0, false)
+	SPRITESHEET_ANIM.add_strip(frames, "down_attack", SHEET_DOWN_ATTACK, PLAYER_FRAME_W, PLAYER_FRAME_H, 4, 14.0, false)
 	sprite.sprite_frames = frames
 	sprite.play("idle")
 
@@ -197,6 +197,9 @@ func _attack() -> void:
 	# Restore pivot
 	slash_pivot.position = _slash_base_pos
 	_attack_mode = 0
+
+	# Keep the animation locked until it finishes (prevents the “x3 speed / snap back to idle” feel).
+	await sprite.animation_finished
 	_is_attacking = false
 
 	await get_tree().create_timer(attack_cooldown).timeout
