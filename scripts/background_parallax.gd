@@ -1,7 +1,8 @@
 extends Node2D
 
-@export var far_factor: float = 0.85
-@export var mid_factor: float = 0.95
+# Parallax factors: 1.0 = almost no perceived movement (more stable), lower = more parallax.
+@export var far_factor: float = 0.99
+@export var mid_factor: float = 0.995
 @export var cover_margin: float = 1.35
 @export var ground_y: float = 150.0
 
