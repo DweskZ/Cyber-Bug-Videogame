@@ -178,21 +178,10 @@ func _attack() -> void:
 		slash_pivot.position = Vector2(14.0 * float(_facing), _slash_base_pos.y)
 		slash_sprite.flip_h = _facing < 0
 
-	# Straight slash (no hook/curve)
-	var rot := (PI / 2.0) if down_attack else 0.0
-	slash_sprite.rotation = rot
-	slash_sprite.scale = Vector2(0.75, 0.75)
-	slash_sprite.modulate.a = 0.0
-
+	# No slash VFX: now that we have proper attack frames, keep it hitbox-only.
 	slash_shape.disabled = false
-	slash_sprite.visible = true
-	var tw := create_tween()
-	tw.tween_property(slash_sprite, "modulate:a", 0.95, 0.03)
-	tw.parallel().tween_property(slash_sprite, "scale", Vector2(1.15, 1.15), attack_duration)
-
 	await get_tree().create_timer(attack_duration).timeout
 	slash_shape.disabled = true
-	slash_sprite.visible = false
 
 	# Restore pivot
 	slash_pivot.position = _slash_base_pos
