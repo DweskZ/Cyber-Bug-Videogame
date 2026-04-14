@@ -17,14 +17,12 @@ script = ExtResource("1")
 
 [node name="Sprite2D" type="AnimatedSprite2D" parent="."]
 centered = true
-# With visual_scale=0.25, a 128px frame becomes ~32px tall, so we nudge the sprite down to sit on the collider.
 position = Vector2(0, -6)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_1")
 
 [node name="Camera2D" type="Camera2D" parent="."]
-# Bigger zoom = character/world appear larger on screen.
 zoom = Vector2(5, 5)
 position_smoothing_enabled = true
 position_smoothing_speed = 10.0
