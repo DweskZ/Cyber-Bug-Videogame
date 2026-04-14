@@ -19,14 +19,14 @@ size = Vector2(1200, 220)
 [node name="LeftWallSprite" type="Sprite2D" parent="Art"]
 texture = ExtResource("2")
 position = Vector2(-90, 60)
-texture_repeat = 1
+texture_repeat = 2
 region_enabled = true
 region_rect = Rect2(0, 0, 20, 320)
 
 [node name="RightWallSprite" type="Sprite2D" parent="Art"]
 texture = ExtResource("2")
 position = Vector2(410, 60)
-texture_repeat = 1
+texture_repeat = 2
 region_enabled = true
 region_rect = Rect2(0, 0, 20, 320)
 

@@ -22,7 +22,7 @@ size = Vector2(140, 16)
 position = Vector2(160, 150)
 texture = ExtResource("3")
 scale = Vector2(1, 1)
-texture_repeat = 1
+texture_repeat = 2
 region_enabled = true
 region_rect = Rect2(0, 0, 520, 20)
 
@@ -30,7 +30,7 @@ region_rect = Rect2(0, 0, 520, 20)
 position = Vector2(249, 54)
 texture = ExtResource("3")
 scale = Vector2(1, 1)
-texture_repeat = 1
+texture_repeat = 2
 region_enabled = true
 region_rect = Rect2(0, 0, 140, 16)
 

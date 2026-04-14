@@ -27,7 +27,7 @@ script = ExtResource("1")
 position = Vector2(160, 150)
 texture = ExtResource("4")
 scale = Vector2(1, 1)
-texture_repeat = 1
+texture_repeat = 2
 region_enabled = true
 region_rect = Rect2(0, 0, 520, 20)
 
@@ -35,7 +35,7 @@ region_rect = Rect2(0, 0, 520, 20)
 position = Vector2(140, 125)
 texture = ExtResource("4")
 scale = Vector2(1, 1)
-texture_repeat = 1
+texture_repeat = 2
 region_enabled = true
 region_rect = Rect2(0, 0, 140, 16)
 
@@ -43,7 +43,7 @@ region_rect = Rect2(0, 0, 140, 16)
 position = Vector2(230, 105)
 texture = ExtResource("4")
 scale = Vector2(1, 1)
-texture_repeat = 1
+texture_repeat = 2
 region_enabled = true
 region_rect = Rect2(0, 0, 140, 16)
 
@@ -51,7 +51,7 @@ region_rect = Rect2(0, 0, 140, 16)
 position = Vector2(305, 80)
 texture = ExtResource("4")
 scale = Vector2(1, 1)
-texture_repeat = 1
+texture_repeat = 2
 region_enabled = true
 region_rect = Rect2(0, 0, 140, 16)
 
