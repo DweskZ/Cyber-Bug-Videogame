@@ -3,19 +3,43 @@ class_name OpenClawBoss
 
 const SPRITESHEET_ANIM := preload("res://scripts/spritesheet_anim.gd")
 
-const SHEET_IDLE: Texture2D = preload("res://assets/spritesheets/boss_idle.png")
-const SHEET_SWIPE: Texture2D = preload("res://assets/spritesheets/boss_swipe.png")
-const SHEET_LASER: Texture2D = preload("res://assets/spritesheets/boss_laser.png")
-const SHEET_SLAM: Texture2D = preload("res://assets/spritesheets/boss_slam.png")
+# OpenClaw boss sprites (new, background removed).
+# These are horizontal strips with varying frame sizes/counts.
+const SHEET_IDLE: Texture2D = preload("res://assets/spritesheets/openclwaboss_final/openclawboss_idle_strip.png")
+const SHEET_SWIPE: Texture2D = preload("res://assets/spritesheets/openclwaboss_final/openclawboss_swipe_strip.png")
+const SHEET_SLAM: Texture2D = preload("res://assets/spritesheets/openclwaboss_final/openclawboss_slam_strip.png")
+const SHEET_HURT: Texture2D = preload("res://assets/spritesheets/openclwaboss_final/openclawboss_hurt_strip.png")
+const SHEET_DEATH: Texture2D = preload("res://assets/spritesheets/openclwaboss_final/openclawboss_death_strip.png")
+const SHEET_LASER: Texture2D = preload("res://assets/spritesheets/openclwaboss_final/openclawboss_laser_strip.png")
 
-const BOSS_FRAME_W := 256
-const BOSS_FRAME_H := 192
+const IDLE_FRAMES := 8
+const SWIPE_FRAMES := 8
+const SLAM_FRAMES := 8
+const HURT_FRAMES := 8
+const DEATH_FRAMES := 8
+const LASER_FRAMES := 5
 
 @export var gravity := 980.0
 @export var max_hp := 25
 @export var move_speed := 70.0
 
+# Scales the big sheets down to a similar on-screen size as the old 256x192 strips.
+@export var visual_scale := 0.25
+
+# Visual node placement (tweak to align sprite with collision hitbox)
+@export var sprite_visual_pos := Vector2(0, -78)
+
+# Per-animation offsets (in source-sheet pixels, then scaled by visual_scale).
+# These compensate for the character being drawn high inside the AI frames.
+@export var offset_idle := Vector2.ZERO
+@export var offset_swipe := Vector2.ZERO
+@export var offset_slam := Vector2.ZERO
+@export var offset_laser := Vector2.ZERO
+
 @export var touch_damage := 2
+
+# Death pacing (let the death anim read before KernelEnding)
+@export var death_hold_seconds := 1.8
 
 # Attack tuning
 @export var swipe_range := 70.0
@@ -55,6 +79,8 @@ func _ready() -> void:
 	collision_layer = 2
 	collision_mask = 1
 	_setup_spriteframes()
+	sprite.scale = Vector2.ONE * visual_scale
+	sprite.position = sprite_visual_pos
 
 	_disable_hitboxes()
 
@@ -71,11 +97,12 @@ func _physics_process(delta: float) -> void:
 		velocity.y += gravity * delta
 
 	var player := get_tree().current_scene.get_node_or_null("Player") as PlayerPlatformer
-	if player != null:
+	# Lock facing during attacks to avoid visual "sliding" when the player crosses sides mid-action.
+	if player != null and _state == "idle" and _t <= 0.0:
 		_facing = int(sign(player.global_position.x - global_position.x))
 		if _facing == 0:
 			_facing = -1
-		sprite.flip_h = _facing > 0
+	sprite.flip_h = _facing > 0
 
 	# Boss animation based on state
 	var desired_anim := "idle"
@@ -87,6 +114,17 @@ func _physics_process(delta: float) -> void:
 		desired_anim = "slam"
 	if sprite.animation != desired_anim:
 		sprite.play(desired_anim)
+
+	# Keep the visual anchored consistently per animation.
+	var desired_offset := offset_idle
+	if desired_anim == "swipe":
+		desired_offset = offset_swipe
+	elif desired_anim == "slam":
+		desired_offset = offset_slam
+	elif desired_anim == "laser":
+		desired_offset = offset_laser
+	if sprite.offset != desired_offset:
+		sprite.offset = desired_offset
 
 	# State machine
 	if _state == "idle":
@@ -103,16 +141,15 @@ func _physics_process(delta: float) -> void:
 				if dist < swipe_range:
 					_start_attack("swipe", swipe_windup)
 				else:
-					# alternate laser/slam
-					if randi() % 2 == 0:
-						_start_attack("laser", laser_windup)
-					else:
+					# Mid/long range: mix slam and laser.
+					if randf() < 0.55:
 						_start_attack("slam", slam_windup)
+					else:
+						_start_attack("laser", laser_windup)
 	else:
 		_t -= delta
 		if _state == "swipe_windup":
 			velocity.x = 0.0
-			scale = Vector2(1.08, 0.92)
 			if _t <= 0.0:
 				_state = "swipe_active"
 				_t = swipe_active
@@ -124,7 +161,6 @@ func _physics_process(delta: float) -> void:
 
 		elif _state == "laser_windup":
 			velocity.x = 0.0
-			scale = Vector2(1.04, 0.96)
 			if _t <= 0.0:
 				_state = "laser_active"
 				_t = laser_active
@@ -136,7 +172,6 @@ func _physics_process(delta: float) -> void:
 
 		elif _state == "slam_windup":
 			velocity.x = 0.0
-			scale = Vector2(1.12, 0.88)
 			if _t <= 0.0:
 				_state = "slam_jump"
 				velocity.y = slam_jump_v
@@ -155,10 +190,31 @@ func _physics_process(delta: float) -> void:
 
 func _setup_spriteframes() -> void:
 	var frames := SpriteFrames.new()
-	SPRITESHEET_ANIM.add_strip(frames, "idle", SHEET_IDLE, BOSS_FRAME_W, BOSS_FRAME_H, 4, 6.0, true)
-	SPRITESHEET_ANIM.add_strip(frames, "swipe", SHEET_SWIPE, BOSS_FRAME_W, BOSS_FRAME_H, 4, 10.0, true)
-	SPRITESHEET_ANIM.add_strip(frames, "laser", SHEET_LASER, BOSS_FRAME_W, BOSS_FRAME_H, 4, 8.0, true)
-	SPRITESHEET_ANIM.add_strip(frames, "slam", SHEET_SLAM, BOSS_FRAME_W, BOSS_FRAME_H, 4, 10.0, true)
+
+	var idle_w := int(SHEET_IDLE.get_width() / IDLE_FRAMES)
+	var idle_h := int(SHEET_IDLE.get_height())
+	SPRITESHEET_ANIM.add_strip(frames, "idle", SHEET_IDLE, idle_w, idle_h, IDLE_FRAMES, 8.0, true)
+
+	var swipe_w := int(SHEET_SWIPE.get_width() / SWIPE_FRAMES)
+	var swipe_h := int(SHEET_SWIPE.get_height())
+	SPRITESHEET_ANIM.add_strip(frames, "swipe", SHEET_SWIPE, swipe_w, swipe_h, SWIPE_FRAMES, 12.0, true)
+
+	var laser_w := int(SHEET_LASER.get_width() / LASER_FRAMES)
+	var laser_h := int(SHEET_LASER.get_height())
+	SPRITESHEET_ANIM.add_strip(frames, "laser", SHEET_LASER, laser_w, laser_h, LASER_FRAMES, 10.0, true)
+
+	var slam_w := int(SHEET_SLAM.get_width() / SLAM_FRAMES)
+	var slam_h := int(SHEET_SLAM.get_height())
+	SPRITESHEET_ANIM.add_strip(frames, "slam", SHEET_SLAM, slam_w, slam_h, SLAM_FRAMES, 10.0, true)
+
+	var hurt_w := int(SHEET_HURT.get_width() / HURT_FRAMES)
+	var hurt_h := int(SHEET_HURT.get_height())
+	SPRITESHEET_ANIM.add_strip(frames, "hurt", SHEET_HURT, hurt_w, hurt_h, HURT_FRAMES, 10.0, false)
+
+	var death_w := int(SHEET_DEATH.get_width() / DEATH_FRAMES)
+	var death_h := int(SHEET_DEATH.get_height())
+	SPRITESHEET_ANIM.add_strip(frames, "death", SHEET_DEATH, death_w, death_h, DEATH_FRAMES, 8.0, false)
+
 	sprite.sprite_frames = frames
 	sprite.play("idle")
 
@@ -248,7 +304,15 @@ func take_damage(amount: int, knockback: Vector2 = Vector2.ZERO) -> void:
 	if hp <= 0:
 		_dying = true
 		Engine.time_scale = 1.0
-		call_deferred("_end_game")
+		_disable_hitboxes()
+		call_deferred("_die_sequence")
+
+func _die_sequence() -> void:
+	# Play death anim, then give it a moment to read before the KernelEnding trigger.
+	if sprite.sprite_frames != null and sprite.sprite_frames.has_animation("death"):
+		sprite.play("death")
+	await get_tree().create_timer(death_hold_seconds).timeout
+	_end_game()
 
 func _end_game() -> void:
 	get_tree().change_scene_to_file("res://scenes/KernelEnding.tscn")
