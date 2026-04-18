@@ -3,21 +3,21 @@ class_name OpenClawBoss
 
 const SPRITESHEET_ANIM := preload("res://scripts/spritesheet_anim.gd")
 
-# OpenClaw boss sprites (new, background removed).
+# OpenClaw boss sprites (new, background removed), packed to remove empty frames.
 # These are horizontal strips with varying frame sizes/counts.
-const SHEET_IDLE: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_feet_unified/openclawboss_idle_stable_strip.png")
-const SHEET_SWIPE: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_feet_unified/openclawboss_swipe_stable_strip.png")
-const SHEET_SLAM: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_feet_unified/openclawboss_slam_stable_strip.png")
-const SHEET_HURT: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_feet_unified/openclawboss_hurt_stable_strip.png")
-const SHEET_DEATH: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_feet_unified/openclawboss_death_stable_strip.png")
-const SHEET_LASER: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_feet_unified/openclawboss_laser_stable_strip.png")
+const SHEET_IDLE: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed/openclawboss_idle_strip.png")
+const SHEET_SWIPE: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed/openclawboss_swipe_strip.png")
+const SHEET_SLAM: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed/openclawboss_slam_strip.png")
+const SHEET_HURT: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed/openclawboss_hurt_strip.png")
+const SHEET_DEATH: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed/openclawboss_death_strip.png")
+const SHEET_LASER: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed/openclawboss_laser_strip.png")
 
 const IDLE_FRAMES := 8
 const SWIPE_FRAMES := 8
-const SLAM_FRAMES := 8
-const HURT_FRAMES := 8
-const DEATH_FRAMES := 8
-const LASER_FRAMES := 5
+const SLAM_FRAMES := 4
+const HURT_FRAMES := 3
+const DEATH_FRAMES := 7
+const LASER_FRAMES := 3
 
 @export var gravity := 980.0
 @export var max_hp := 25
