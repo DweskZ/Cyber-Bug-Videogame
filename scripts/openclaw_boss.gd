@@ -5,12 +5,12 @@ const SPRITESHEET_ANIM := preload("res://scripts/spritesheet_anim.gd")
 
 # OpenClaw boss sprites (new, background removed).
 # These are horizontal strips with varying frame sizes/counts.
-const SHEET_IDLE: Texture2D = preload("res://assets/spritesheets/openclwaboss_final/openclawboss_idle_strip.png")
-const SHEET_SWIPE: Texture2D = preload("res://assets/spritesheets/openclwaboss_final/openclawboss_swipe_strip.png")
-const SHEET_SLAM: Texture2D = preload("res://assets/spritesheets/openclwaboss_final/openclawboss_slam_strip.png")
-const SHEET_HURT: Texture2D = preload("res://assets/spritesheets/openclwaboss_final/openclawboss_hurt_strip.png")
-const SHEET_DEATH: Texture2D = preload("res://assets/spritesheets/openclwaboss_final/openclawboss_death_strip.png")
-const SHEET_LASER: Texture2D = preload("res://assets/spritesheets/openclwaboss_final/openclawboss_laser_strip.png")
+const SHEET_IDLE: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_unified/openclawboss_idle_stable_strip.png")
+const SHEET_SWIPE: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_unified/openclawboss_swipe_stable_strip.png")
+const SHEET_SLAM: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_unified/openclawboss_slam_stable_strip.png")
+const SHEET_HURT: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_unified/openclawboss_hurt_stable_strip.png")
+const SHEET_DEATH: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_unified/openclawboss_death_stable_strip.png")
+const SHEET_LASER: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_unified/openclawboss_laser_stable_strip.png")
 
 const IDLE_FRAMES := 8
 const SWIPE_FRAMES := 8
@@ -24,10 +24,10 @@ const LASER_FRAMES := 5
 @export var move_speed := 70.0
 
 # Scales the big sheets down to a similar on-screen size as the old 256x192 strips.
-@export var visual_scale := 0.25
+@export var visual_scale := 0.055
 
 # Visual node placement (tweak to align sprite with collision hitbox)
-@export var sprite_visual_pos := Vector2(0, -78)
+@export var sprite_visual_pos := Vector2(0, -20)
 
 # Per-animation offsets (in source-sheet pixels, then scaled by visual_scale).
 # These compensate for the character being drawn high inside the AI frames.
