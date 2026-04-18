@@ -423,21 +423,32 @@ func _end_attack(cooldown: float) -> void:
 	_t = cooldown
 
 func _disable_hitboxes() -> void:
-	swipe_shape.disabled = true
-	laser_shape.disabled = true
-	slam_shape.disabled = true
-	swipe_area.monitoring = false
-	laser_area.monitoring = false
-	slam_area.monitoring = false
+	# These can be called from inside physics callbacks (e.g. body_entered / hit detection).
+	# Use deferred writes to avoid "flushing queries" errors.
+	if swipe_shape != null:
+		swipe_shape.set_deferred("disabled", true)
+	if laser_shape != null:
+		laser_shape.set_deferred("disabled", true)
+	if slam_shape != null:
+		slam_shape.set_deferred("disabled", true)
+	if swipe_area != null:
+		swipe_area.set_deferred("monitoring", false)
+	if laser_area != null:
+		laser_area.set_deferred("monitoring", false)
+	if slam_area != null:
+		slam_area.set_deferred("monitoring", false)
 
-	swipe_fx.visible = false
-	laser_fx.visible = false
-	slam_fx.visible = false
+	if swipe_fx != null:
+		swipe_fx.visible = false
+	if laser_fx != null:
+		laser_fx.visible = false
+	if slam_fx != null:
+		slam_fx.visible = false
 
 func _enable_swipe() -> void:
 	swipe_area.position = Vector2(40.0 * float(_facing), 0)
-	swipe_shape.disabled = false
-	swipe_area.monitoring = true
+	swipe_shape.set_deferred("disabled", false)
+	swipe_area.set_deferred("monitoring", true)
 
 	swipe_fx.visible = true
 	swipe_fx.flip_h = _facing < 0
@@ -449,8 +460,8 @@ func _enable_swipe() -> void:
 
 func _enable_laser() -> void:
 	laser_area.position = Vector2(70.0 * float(_facing), -8)
-	laser_shape.disabled = false
-	laser_area.monitoring = true
+	laser_shape.set_deferred("disabled", false)
+	laser_area.set_deferred("monitoring", true)
 
 	laser_fx.visible = true
 	laser_fx.flip_h = _facing < 0
@@ -460,8 +471,8 @@ func _enable_laser() -> void:
 
 func _enable_slam() -> void:
 	slam_area.position = Vector2(0, 20)
-	slam_shape.disabled = false
-	slam_area.monitoring = true
+	slam_shape.set_deferred("disabled", false)
+	slam_area.set_deferred("monitoring", true)
 
 	slam_fx.visible = true
 	slam_fx.modulate.a = 0.0
