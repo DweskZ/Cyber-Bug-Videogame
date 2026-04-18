@@ -5,12 +5,12 @@ const SPRITESHEET_ANIM := preload("res://scripts/spritesheet_anim.gd")
 
 # OpenClaw boss sprites (new, background removed).
 # These are horizontal strips with varying frame sizes/counts.
-const SHEET_IDLE: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_unified/openclawboss_idle_stable_strip.png")
-const SHEET_SWIPE: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_unified/openclawboss_swipe_stable_strip.png")
-const SHEET_SLAM: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_unified/openclawboss_slam_stable_strip.png")
-const SHEET_HURT: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_unified/openclawboss_hurt_stable_strip.png")
-const SHEET_DEATH: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_unified/openclawboss_death_stable_strip.png")
-const SHEET_LASER: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_unified/openclawboss_laser_stable_strip.png")
+const SHEET_IDLE: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_feet_unified/openclawboss_idle_stable_strip.png")
+const SHEET_SWIPE: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_feet_unified/openclawboss_swipe_stable_strip.png")
+const SHEET_SLAM: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_feet_unified/openclawboss_slam_stable_strip.png")
+const SHEET_HURT: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_feet_unified/openclawboss_hurt_stable_strip.png")
+const SHEET_DEATH: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_feet_unified/openclawboss_death_stable_strip.png")
+const SHEET_LASER: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_feet_unified/openclawboss_laser_stable_strip.png")
 
 const IDLE_FRAMES := 8
 const SWIPE_FRAMES := 8
@@ -92,6 +92,12 @@ func _physics_process(delta: float) -> void:
 	if _dying:
 		_disable_hitboxes()
 		return
+
+	# Keep transforms stable (same trick as the main character).
+	sprite.position = sprite_visual_pos
+	sprite.scale = Vector2.ONE * visual_scale
+	sprite.rotation = 0.0
+
 	# Gravity
 	if not is_on_floor():
 		velocity.y += gravity * delta
