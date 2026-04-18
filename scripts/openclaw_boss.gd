@@ -5,12 +5,12 @@ const SPRITESHEET_ANIM := preload("res://scripts/spritesheet_anim.gd")
 
 # OpenClaw boss sprites (packed strips, no blank frames, faster to render).
 # We can optionally compute stable offsets at load-time to prevent sliding.
-const SHEET_IDLE: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed/openclawboss_idle_strip.png")
-const SHEET_SWIPE: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed/openclawboss_swipe_strip.png")
-const SHEET_SLAM: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed/openclawboss_slam_strip.png")
-const SHEET_HURT: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed/openclawboss_hurt_strip.png")
-const SHEET_DEATH: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed/openclawboss_death_strip.png")
-const SHEET_LASER: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed/openclawboss_laser_strip.png")
+const SHEET_IDLE: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed_aligned/openclawboss_idle_strip_aligned.png")
+const SHEET_SWIPE: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed_aligned/openclawboss_swipe_strip_aligned.png")
+const SHEET_SLAM: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed_aligned/openclawboss_slam_strip_aligned.png")
+const SHEET_HURT: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed_aligned/openclawboss_hurt_strip_aligned.png")
+const SHEET_DEATH: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed_aligned/openclawboss_death_strip_aligned.png")
+const SHEET_LASER: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed_aligned/openclawboss_laser_strip_aligned.png")
 
 const IDLE_FRAMES := 8
 const SWIPE_FRAMES := 8
@@ -31,7 +31,7 @@ const LASER_FRAMES := 3
 
 # If true, compute stable offsets from alpha to keep the sprite anchored.
 # Implementation uses an intersection-rect anchor to avoid "weapon-driven" sliding.
-@export var use_auto_frame_offsets := true
+@export var use_auto_frame_offsets := false
 
 # Per-animation offsets (in source-sheet pixels, then scaled by visual_scale).
 @export var offset_idle := Vector2.ZERO
