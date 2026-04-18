@@ -48,8 +48,8 @@ const LASER_FRAMES := 3
 
 # Attack tuning
 @export var enable_swipe := true
-@export var enable_laser := true
-@export var enable_slam := true
+@export var enable_laser := false
+@export var enable_slam := false
 
 @export var swipe_range := 70.0
 @export var swipe_windup := 0.35
