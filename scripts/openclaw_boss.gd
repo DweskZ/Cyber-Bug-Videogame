@@ -3,21 +3,20 @@ class_name OpenClawBoss
 
 const SPRITESHEET_ANIM := preload("res://scripts/spritesheet_anim.gd")
 
-# OpenClaw boss sprites (stable-aligned strips).
-# These strips include a few blank padding frames in some actions.
-# We sanitize blanks at load-time to avoid flicker.
-const SHEET_IDLE: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_feet_unified/openclawboss_idle_stable_strip.png")
-const SHEET_SWIPE: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_feet_unified/openclawboss_swipe_stable_strip.png")
-const SHEET_SLAM: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_feet_unified/openclawboss_slam_stable_strip.png")
-const SHEET_HURT: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_feet_unified/openclawboss_hurt_stable_strip.png")
-const SHEET_DEATH: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_feet_unified/openclawboss_death_stable_strip.png")
-const SHEET_LASER: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_feet_unified/openclawboss_laser_stable_strip.png")
+# OpenClaw boss sprites (packed strips, no blank frames, faster to render).
+# We can optionally compute stable offsets at load-time to prevent sliding.
+const SHEET_IDLE: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed/openclawboss_idle_strip.png")
+const SHEET_SWIPE: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed/openclawboss_swipe_strip.png")
+const SHEET_SLAM: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed/openclawboss_slam_strip.png")
+const SHEET_HURT: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed/openclawboss_hurt_strip.png")
+const SHEET_DEATH: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed/openclawboss_death_strip.png")
+const SHEET_LASER: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed/openclawboss_laser_strip.png")
 
 const IDLE_FRAMES := 8
 const SWIPE_FRAMES := 8
 const SLAM_FRAMES := 4
 const HURT_FRAMES := 3
-const DEATH_FRAMES := 8
+const DEATH_FRAMES := 7
 const LASER_FRAMES := 3
 
 @export var gravity := 980.0
@@ -30,9 +29,9 @@ const LASER_FRAMES := 3
 # Visual node placement (tweak to align sprite with collision hitbox)
 @export var sprite_visual_pos := Vector2(0, -32)
 
-# If true, compute per-frame offsets from alpha to keep the sprite anchored.
-# Warning: for wide action frames (weapons/effects), this can cause "sliding".
-@export var use_auto_frame_offsets := false
+# If true, compute stable offsets from alpha to keep the sprite anchored.
+# Implementation uses an intersection-rect anchor to avoid "weapon-driven" sliding.
+@export var use_auto_frame_offsets := true
 
 # Per-animation offsets (in source-sheet pixels, then scaled by visual_scale).
 @export var offset_idle := Vector2.ZERO
@@ -336,26 +335,46 @@ func _compute_frame_offsets(sheet: Texture2D, frame_w: int, frame_h: int, frame_
 	var img := sheet.get_image()
 	if img == null:
 		return out
-	# Safety: make sure the image is in a readable format.
 	img.convert(Image.FORMAT_RGBA8)
+
+	# 1) First pass: compute used rect per frame.
+	var used_rects: Array[Rect2i] = []
+	used_rects.resize(frame_count)
+	var have_any := false
+	var inter := Rect2i()
 
 	for i in range(frame_count):
 		var r := Rect2i(i * frame_w, 0, frame_w, frame_h)
-		# get_region() copies only the frame, so get_used_rect() is frame-local.
 		var sub := img.get_region(r)
 		var used := sub.get_used_rect()
+		var used_area := used.size.x * used.size.y
+		if used.size.x <= 0 or used.size.y <= 0 or used_area < 256:
+			used_rects[i] = Rect2i()
+			continue
+		used_rects[i] = used
+		if not have_any:
+			have_any = true
+			inter = used
+		else:
+			inter = inter.intersection(used)
+
+	# 2) If intersection is valid, anchor to it (stable across frames).
+	if have_any and inter.size.x > 0 and inter.size.y > 0:
+		var ax := float(inter.position.x) + float(inter.size.x) * 0.5
+		var ay := float(inter.position.y) + float(inter.size.y)
+		var o := Vector2(float(frame_w) * 0.5 - ax, float(frame_h) * 0.5 - ay)
+		for i in range(frame_count):
+			out[i] = (out[i - 1] if i > 0 else o)
+		return out
+
+	# 3) Fallback: per-frame bottom-center anchor.
+	for i in range(frame_count):
+		var used := used_rects[i]
 		if used.size.x <= 0 or used.size.y <= 0:
 			out[i] = (out[i - 1] if i > 0 else Vector2.ZERO)
 			continue
-		# If the frame is almost empty (bad cut), keep previous offset to avoid "teleport".
-		var used_area := used.size.x * used.size.y
-		if used_area < 256:
-			out[i] = (out[i - 1] if i > 0 else Vector2.ZERO)
-			continue
-		# Anchor at bottom-center of the visible pixels.
 		var ax := float(used.position.x) + float(used.size.x) * 0.5
 		var ay := float(used.position.y) + float(used.size.y)
-		# AnimatedSprite2D is centered, so offset needed to bring (ax, ay) to local (0, 0).
 		out[i] = Vector2(float(frame_w) * 0.5 - ax, float(frame_h) * 0.5 - ay)
 	return out
 
