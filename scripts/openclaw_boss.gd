@@ -3,20 +3,21 @@ class_name OpenClawBoss
 
 const SPRITESHEET_ANIM := preload("res://scripts/spritesheet_anim.gd")
 
-# OpenClaw boss sprites (new, background removed), packed to remove empty frames.
-# These are horizontal strips with varying frame sizes/counts.
-const SHEET_IDLE: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed/openclawboss_idle_strip.png")
-const SHEET_SWIPE: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed/openclawboss_swipe_strip.png")
-const SHEET_SLAM: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed/openclawboss_slam_strip.png")
-const SHEET_HURT: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed/openclawboss_hurt_strip.png")
-const SHEET_DEATH: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed/openclawboss_death_strip.png")
-const SHEET_LASER: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed/openclawboss_laser_strip.png")
+# OpenClaw boss sprites (stable-aligned strips).
+# These strips include a few blank padding frames in some actions.
+# We sanitize blanks at load-time to avoid flicker.
+const SHEET_IDLE: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_feet_unified/openclawboss_idle_stable_strip.png")
+const SHEET_SWIPE: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_feet_unified/openclawboss_swipe_stable_strip.png")
+const SHEET_SLAM: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_feet_unified/openclawboss_slam_stable_strip.png")
+const SHEET_HURT: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_feet_unified/openclawboss_hurt_stable_strip.png")
+const SHEET_DEATH: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_feet_unified/openclawboss_death_stable_strip.png")
+const SHEET_LASER: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_stable_feet_unified/openclawboss_laser_stable_strip.png")
 
 const IDLE_FRAMES := 8
 const SWIPE_FRAMES := 8
 const SLAM_FRAMES := 4
 const HURT_FRAMES := 3
-const DEATH_FRAMES := 7
+const DEATH_FRAMES := 8
 const LASER_FRAMES := 3
 
 @export var gravity := 980.0
@@ -27,14 +28,19 @@ const LASER_FRAMES := 3
 @export var visual_scale := 0.055
 
 # Visual node placement (tweak to align sprite with collision hitbox)
-@export var sprite_visual_pos := Vector2(0, -20)
+@export var sprite_visual_pos := Vector2(0, -32)
+
+# If true, compute per-frame offsets from alpha to keep the sprite anchored.
+# Warning: for wide action frames (weapons/effects), this can cause "sliding".
+@export var use_auto_frame_offsets := false
 
 # Per-animation offsets (in source-sheet pixels, then scaled by visual_scale).
-# These compensate for the character being drawn high inside the AI frames.
 @export var offset_idle := Vector2.ZERO
 @export var offset_swipe := Vector2.ZERO
 @export var offset_slam := Vector2.ZERO
 @export var offset_laser := Vector2.ZERO
+@export var offset_hurt := Vector2.ZERO
+@export var offset_death := Vector2.ZERO
 
 @export var touch_damage := 2
 
@@ -42,6 +48,10 @@ const LASER_FRAMES := 3
 @export var death_hold_seconds := 1.8
 
 # Attack tuning
+@export var enable_swipe := true
+@export var enable_laser := true
+@export var enable_slam := true
+
 @export var swipe_range := 70.0
 @export var swipe_windup := 0.35
 @export var swipe_active := 0.14
@@ -74,6 +84,9 @@ var _dying := false
 var _state := "idle"
 var _t := 0.0
 
+# Per-frame visual offsets (computed from alpha), optional.
+var _frame_offsets := {} # StringName -> PackedVector2Array
+
 func _ready() -> void:
 	hp = max_hp
 	collision_layer = 2
@@ -81,6 +94,12 @@ func _ready() -> void:
 	_setup_spriteframes()
 	sprite.scale = Vector2.ONE * visual_scale
 	sprite.position = sprite_visual_pos
+
+	# Optional per-frame offset hook.
+	if use_auto_frame_offsets:
+		sprite.frame_changed.connect(_on_sprite_frame_changed)
+		sprite.animation_changed.connect(_on_sprite_animation_changed)
+	_apply_visual_offset()
 
 	_disable_hitboxes()
 
@@ -121,16 +140,8 @@ func _physics_process(delta: float) -> void:
 	if sprite.animation != desired_anim:
 		sprite.play(desired_anim)
 
-	# Keep the visual anchored consistently per animation.
-	var desired_offset := offset_idle
-	if desired_anim == "swipe":
-		desired_offset = offset_swipe
-	elif desired_anim == "slam":
-		desired_offset = offset_slam
-	elif desired_anim == "laser":
-		desired_offset = offset_laser
-	if sprite.offset != desired_offset:
-		sprite.offset = desired_offset
+	# Apply per-frame offset (optional) + per-animation tweak.
+	_apply_visual_offset()
 
 	# State machine
 	if _state == "idle":
@@ -145,13 +156,26 @@ func _physics_process(delta: float) -> void:
 			_t -= delta
 			if _t <= 0.0:
 				if dist < swipe_range:
-					_start_attack("swipe", swipe_windup)
+					if enable_swipe:
+						_start_attack("swipe", swipe_windup)
+					elif enable_slam:
+						_start_attack("slam", slam_windup)
+					elif enable_laser:
+						_start_attack("laser", laser_windup)
 				else:
 					# Mid/long range: mix slam and laser.
-					if randf() < 0.55:
-						_start_attack("slam", slam_windup)
-					else:
-						_start_attack("laser", laser_windup)
+					var choices: Array[String] = []
+					if enable_slam:
+						choices.append("slam")
+					if enable_laser:
+						choices.append("laser")
+					# If everything is disabled, just keep pacing.
+					if choices.size() > 0:
+						var pick := choices[randi() % choices.size()]
+						if pick == "slam":
+							_start_attack("slam", slam_windup)
+						else:
+							_start_attack("laser", laser_windup)
 	else:
 		_t -= delta
 		if _state == "swipe_windup":
@@ -197,32 +221,187 @@ func _physics_process(delta: float) -> void:
 func _setup_spriteframes() -> void:
 	var frames := SpriteFrames.new()
 
-	var idle_w := int(SHEET_IDLE.get_width() / IDLE_FRAMES)
-	var idle_h := int(SHEET_IDLE.get_height())
-	SPRITESHEET_ANIM.add_strip(frames, "idle", SHEET_IDLE, idle_w, idle_h, IDLE_FRAMES, 8.0, true)
+	var idle_sz := _frame_size_from_sheet(SHEET_IDLE, IDLE_FRAMES)
+	var idle_w := idle_sz.x
+	var idle_h := idle_sz.y
+	_add_strip_baked(frames, "idle", SHEET_IDLE, idle_w, idle_h, IDLE_FRAMES, 8.0, true)
+	if use_auto_frame_offsets:
+		_frame_offsets[&"idle"] = _compute_frame_offsets(SHEET_IDLE, idle_w, idle_h, IDLE_FRAMES)
 
-	var swipe_w := int(SHEET_SWIPE.get_width() / SWIPE_FRAMES)
-	var swipe_h := int(SHEET_SWIPE.get_height())
-	SPRITESHEET_ANIM.add_strip(frames, "swipe", SHEET_SWIPE, swipe_w, swipe_h, SWIPE_FRAMES, 12.0, true)
+	var swipe_sz := _frame_size_from_sheet(SHEET_SWIPE, SWIPE_FRAMES)
+	var swipe_w := swipe_sz.x
+	var swipe_h := swipe_sz.y
+	_add_strip_baked(frames, "swipe", SHEET_SWIPE, swipe_w, swipe_h, SWIPE_FRAMES, 12.0, true)
+	if use_auto_frame_offsets:
+		_frame_offsets[&"swipe"] = _compute_frame_offsets(SHEET_SWIPE, swipe_w, swipe_h, SWIPE_FRAMES)
 
-	var laser_w := int(SHEET_LASER.get_width() / LASER_FRAMES)
-	var laser_h := int(SHEET_LASER.get_height())
-	SPRITESHEET_ANIM.add_strip(frames, "laser", SHEET_LASER, laser_w, laser_h, LASER_FRAMES, 10.0, true)
+	var laser_sz := _frame_size_from_sheet(SHEET_LASER, LASER_FRAMES)
+	var laser_w := laser_sz.x
+	var laser_h := laser_sz.y
+	_add_strip_baked(frames, "laser", SHEET_LASER, laser_w, laser_h, LASER_FRAMES, 10.0, true)
+	if use_auto_frame_offsets:
+		_frame_offsets[&"laser"] = _compute_frame_offsets(SHEET_LASER, laser_w, laser_h, LASER_FRAMES)
 
-	var slam_w := int(SHEET_SLAM.get_width() / SLAM_FRAMES)
-	var slam_h := int(SHEET_SLAM.get_height())
-	SPRITESHEET_ANIM.add_strip(frames, "slam", SHEET_SLAM, slam_w, slam_h, SLAM_FRAMES, 10.0, true)
+	var slam_sz := _frame_size_from_sheet(SHEET_SLAM, SLAM_FRAMES)
+	var slam_w := slam_sz.x
+	var slam_h := slam_sz.y
+	_add_strip_baked(frames, "slam", SHEET_SLAM, slam_w, slam_h, SLAM_FRAMES, 10.0, true)
+	if use_auto_frame_offsets:
+		_frame_offsets[&"slam"] = _compute_frame_offsets(SHEET_SLAM, slam_w, slam_h, SLAM_FRAMES)
 
-	var hurt_w := int(SHEET_HURT.get_width() / HURT_FRAMES)
-	var hurt_h := int(SHEET_HURT.get_height())
-	SPRITESHEET_ANIM.add_strip(frames, "hurt", SHEET_HURT, hurt_w, hurt_h, HURT_FRAMES, 10.0, false)
+	var hurt_sz := _frame_size_from_sheet(SHEET_HURT, HURT_FRAMES)
+	var hurt_w := hurt_sz.x
+	var hurt_h := hurt_sz.y
+	_add_strip_baked(frames, "hurt", SHEET_HURT, hurt_w, hurt_h, HURT_FRAMES, 10.0, false)
+	if use_auto_frame_offsets:
+		_frame_offsets[&"hurt"] = _compute_frame_offsets(SHEET_HURT, hurt_w, hurt_h, HURT_FRAMES)
 
-	var death_w := int(SHEET_DEATH.get_width() / DEATH_FRAMES)
-	var death_h := int(SHEET_DEATH.get_height())
-	SPRITESHEET_ANIM.add_strip(frames, "death", SHEET_DEATH, death_w, death_h, DEATH_FRAMES, 8.0, false)
+	var death_sz := _frame_size_from_sheet(SHEET_DEATH, DEATH_FRAMES)
+	var death_w := death_sz.x
+	var death_h := death_sz.y
+	_add_strip_baked(frames, "death", SHEET_DEATH, death_w, death_h, DEATH_FRAMES, 8.0, false)
+	if use_auto_frame_offsets:
+		_frame_offsets[&"death"] = _compute_frame_offsets(SHEET_DEATH, death_w, death_h, DEATH_FRAMES)
 
 	sprite.sprite_frames = frames
 	sprite.play("idle")
+
+func _frame_size_from_sheet(sheet: Texture2D, frames: int) -> Vector2i:
+	if sheet == null or frames <= 0:
+		return Vector2i.ZERO
+	var img := sheet.get_image()
+	if img != null:
+		return Vector2i(int(img.get_width() / frames), int(img.get_height()))
+	return Vector2i(int(sheet.get_width() / frames), int(sheet.get_height()))
+
+func _add_strip_baked(
+	frames: SpriteFrames,
+	anim_name: String,
+	sheet: Texture2D,
+	frame_w: int,
+	frame_h: int,
+	frame_count: int,
+	fps: float,
+	loop: bool
+) -> void:
+	if frames == null or sheet == null:
+		return
+	if not frames.has_animation(anim_name):
+		frames.add_animation(anim_name)
+	frames.set_animation_speed(anim_name, fps)
+	frames.set_animation_loop(anim_name, loop)
+
+	var img := sheet.get_image()
+	if img == null:
+		return
+	img.convert(Image.FORMAT_RGBA8)
+
+	# Some generated strips include blank padding frames.
+	# Replace blanks with the previous good frame so the animation never flickers.
+	var texs: Array[Texture2D] = []
+	texs.resize(frame_count)
+	var first_good: Texture2D = null
+
+	for i in range(frame_count):
+		var r := Rect2i(i * frame_w, 0, frame_w, frame_h)
+		var sub := img.get_region(r)
+		var used := sub.get_used_rect()
+		var used_area := used.size.x * used.size.y
+		if used_area < 256:
+			texs[i] = null
+			continue
+		var tex := ImageTexture.create_from_image(sub)
+		texs[i] = tex
+		if first_good == null:
+			first_good = tex
+
+	if first_good == null:
+		return
+
+	var last_good: Texture2D = first_good
+	for i in range(frame_count):
+		if texs[i] == null:
+			texs[i] = last_good
+		else:
+			last_good = texs[i]
+
+	for i in range(frame_count):
+		frames.add_frame(anim_name, texs[i])
+
+func _compute_frame_offsets(sheet: Texture2D, frame_w: int, frame_h: int, frame_count: int) -> PackedVector2Array:
+	var out := PackedVector2Array()
+	out.resize(frame_count)
+	if sheet == null:
+		return out
+	var img := sheet.get_image()
+	if img == null:
+		return out
+	# Safety: make sure the image is in a readable format.
+	img.convert(Image.FORMAT_RGBA8)
+
+	for i in range(frame_count):
+		var r := Rect2i(i * frame_w, 0, frame_w, frame_h)
+		# get_region() copies only the frame, so get_used_rect() is frame-local.
+		var sub := img.get_region(r)
+		var used := sub.get_used_rect()
+		if used.size.x <= 0 or used.size.y <= 0:
+			out[i] = (out[i - 1] if i > 0 else Vector2.ZERO)
+			continue
+		# If the frame is almost empty (bad cut), keep previous offset to avoid "teleport".
+		var used_area := used.size.x * used.size.y
+		if used_area < 256:
+			out[i] = (out[i - 1] if i > 0 else Vector2.ZERO)
+			continue
+		# Anchor at bottom-center of the visible pixels.
+		var ax := float(used.position.x) + float(used.size.x) * 0.5
+		var ay := float(used.position.y) + float(used.size.y)
+		# AnimatedSprite2D is centered, so offset needed to bring (ax, ay) to local (0, 0).
+		out[i] = Vector2(float(frame_w) * 0.5 - ax, float(frame_h) * 0.5 - ay)
+	return out
+
+func _on_sprite_frame_changed() -> void:
+	_apply_visual_offset()
+
+func _on_sprite_animation_changed() -> void:
+	_apply_visual_offset()
+
+func _tweak_for_anim(anim: StringName) -> Vector2:
+	if anim == &"idle":
+		return offset_idle
+	if anim == &"swipe":
+		return offset_swipe
+	if anim == &"slam":
+		return offset_slam
+	if anim == &"laser":
+		return offset_laser
+	if anim == &"hurt":
+		return offset_hurt
+	if anim == &"death":
+		return offset_death
+	return Vector2.ZERO
+
+func _apply_visual_offset() -> void:
+	if sprite == null:
+		return
+	var anim: StringName = sprite.animation
+	var tweak := _tweak_for_anim(anim)
+
+	if use_auto_frame_offsets:
+		var arr: PackedVector2Array = _frame_offsets.get(anim, PackedVector2Array())
+		var o := Vector2.ZERO
+		if arr.size() > 0:
+			var idx := clampi(sprite.frame, 0, arr.size() - 1)
+			o = arr[idx]
+		# When flipped, mirror X offset.
+		if sprite.flip_h:
+			o.x = -o.x
+			tweak.x = -tweak.x
+		sprite.offset = o + tweak
+	else:
+		# Only the manual tweak, to avoid per-frame "sliding".
+		if sprite.flip_h:
+			tweak.x = -tweak.x
+		sprite.offset = tweak
 
 func _start_attack(kind: String, windup: float) -> void:
 	scale = Vector2.ONE
