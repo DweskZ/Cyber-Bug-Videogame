@@ -49,7 +49,7 @@ region_rect = Rect2(0, 0, 140, 16)
 
 [node name="PlatformSprite3" type="Sprite2D" parent="Art" unique_id=1967302374]
 texture_repeat = 2
-position = Vector2(181, 78)
+position = Vector2(184, 58)
 texture = ExtResource("4")
 region_enabled = true
 region_rect = Rect2(0, 0, 140, 16)
@@ -70,7 +70,7 @@ position = Vector2(458, 47)
 shape = SubResource("RectangleShape2D_2")
 
 [node name="Platform3" type="CollisionShape2D" parent="World" unique_id=1025042379]
-position = Vector2(281, -30)
+position = Vector2(284, -50)
 shape = SubResource("RectangleShape2D_2")
 
 [node name="Bounds" parent="." unique_id=175198438 instance=ExtResource("8")]
@@ -85,14 +85,16 @@ position = Vector2(149, 162)
 [node name="EnemyB" parent="." unique_id=1096084113 instance=ExtResource("9")]
 position = Vector2(314, 342)
 
-[node name="BounceOrb1" parent="." instance=ExtResource("10")]
-position = Vector2(260, 357)
+[node name="BounceOrb1" parent="." unique_id=1839664056 instance=ExtResource("10")]
+position = Vector2(495, 196)
+collision_layer = 2
+collision_mask = 0
 
 [node name="Packet1" parent="." unique_id=176199604 instance=ExtResource("5")]
 position = Vector2(183, 196)
 
 [node name="Packet2" parent="." unique_id=1259679429 instance=ExtResource("5")]
-position = Vector2(395, 162)
+position = Vector2(395, 112)
 
 [node name="ToLevel02" parent="." unique_id=850438709 instance=ExtResource("6")]
 position = Vector2(74, 162)
