@@ -200,6 +200,9 @@ func _attack() -> void:
 func reset_pogo() -> void:
 	_pogo_used = false
 
+func is_down_attack_active() -> bool:
+	return _is_attacking and _attack_mode == 1
+
 func _on_slash_body_entered(body: Node) -> void:
 	var kb := Vector2(_facing * 220.0, -80.0)
 	if _attack_mode == 1:

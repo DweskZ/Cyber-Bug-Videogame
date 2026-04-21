@@ -3,6 +3,7 @@ class_name BounceOrb
 
 @export var bounce_velocity := -520.0
 @export var bounce_only_when_falling := true
+@export var require_down_attack := true
 @export var cooldown := 0.05
 
 @onready var trigger: Area2D = $Trigger
@@ -23,6 +24,9 @@ func _on_body_entered(body: Node) -> void:
 
 	var player := body as PlayerPlatformer
 	if player == null:
+		return
+
+	if require_down_attack and not player.is_down_attack_active():
 		return
 
 	if bounce_only_when_falling and player.velocity.y < 0.0:

@@ -1,17 +1,18 @@
 [gd_scene format=3 uid="uid://boaeyacojqgy"]
 
 [ext_resource type="Script" uid="uid://dy7frprvtj7dh" path="res://scripts/level_entry.gd" id="1"]
-[ext_resource type="PackedScene" path="res://scenes/PlayerPlatformer.tscn" id="2"]
+[ext_resource type="PackedScene" uid="uid://brqlgxm2qu41f" path="res://scenes/PlayerPlatformer.tscn" id="2"]
 [ext_resource type="PackedScene" path="res://scenes/Background.tscn" id="3"]
-[ext_resource type="Texture2D" path="res://assets/platform_tex.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://dhdqellqtgc58" path="res://assets/platform_tex.png" id="4"]
 [ext_resource type="PackedScene" path="res://scenes/Packet.tscn" id="5"]
 [ext_resource type="PackedScene" path="res://scenes/TransitionZone.tscn" id="6"]
 [ext_resource type="Script" uid="uid://d0k0jatf84o1" path="res://scripts/hud.gd" id="7"]
-[ext_resource type="PackedScene" path="res://scenes/LevelBounds.tscn" id="8"]
+[ext_resource type="PackedScene" uid="uid://tvy7rcn4br8o" path="res://scenes/LevelBounds.tscn" id="8"]
 [ext_resource type="PackedScene" path="res://scenes/EnemyWalker.tscn" id="9"]
+[ext_resource type="PackedScene" path="res://scenes/BounceOrb.tscn" id="10"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
-size = Vector2(520, 20)
+size = Vector2(678, 20)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2"]
 size = Vector2(140, 16)
@@ -22,90 +23,93 @@ script = ExtResource("1")
 [node name="BG" parent="." unique_id=1514472680 instance=ExtResource("3")]
 
 [node name="Art" type="Node2D" parent="." unique_id=44328319]
+position = Vector2(183, 108)
 
 [node name="FloorSprite" type="Sprite2D" parent="Art" unique_id=1803052088]
-position = Vector2(160, 150)
-texture = ExtResource("4")
-scale = Vector2(1, 1)
 texture_repeat = 2
+position = Vector2(139, 269)
+scale = Vector2(1.2653847, 2.1000001)
+texture = ExtResource("4")
 region_enabled = true
 region_rect = Rect2(0, 0, 520, 20)
 
 [node name="PlatformSprite1" type="Sprite2D" parent="Art" unique_id=1861115084]
-position = Vector2(140, 125)
-texture = ExtResource("4")
-scale = Vector2(1, 1)
 texture_repeat = 2
+position = Vector2(-62, 108)
+texture = ExtResource("4")
 region_enabled = true
 region_rect = Rect2(0, 0, 140, 16)
 
 [node name="PlatformSprite2" type="Sprite2D" parent="Art" unique_id=1817811082]
-position = Vector2(230, 105)
-texture = ExtResource("4")
-scale = Vector2(1, 1)
 texture_repeat = 2
+position = Vector2(358, 155)
+texture = ExtResource("4")
 region_enabled = true
 region_rect = Rect2(0, 0, 140, 16)
 
 [node name="PlatformSprite3" type="Sprite2D" parent="Art" unique_id=1967302374]
-position = Vector2(305, 80)
-texture = ExtResource("4")
-scale = Vector2(1, 1)
 texture_repeat = 2
+position = Vector2(181, 78)
+texture = ExtResource("4")
 region_enabled = true
 region_rect = Rect2(0, 0, 140, 16)
 
 [node name="World" type="StaticBody2D" parent="." unique_id=1765370479]
-collision_layer = 1
-collision_mask = 1
+position = Vector2(83, 216)
 
 [node name="Floor" type="CollisionShape2D" parent="World" unique_id=815925278]
-position = Vector2(160, 150)
+position = Vector2(238, 149)
 shape = SubResource("RectangleShape2D_1")
 
 [node name="Platform1" type="CollisionShape2D" parent="World" unique_id=757066973]
-position = Vector2(140, 125)
+position = Vector2(44, 0)
 shape = SubResource("RectangleShape2D_2")
 
 [node name="Platform2" type="CollisionShape2D" parent="World" unique_id=1453963484]
-position = Vector2(230, 105)
+position = Vector2(458, 47)
 shape = SubResource("RectangleShape2D_2")
 
 [node name="Platform3" type="CollisionShape2D" parent="World" unique_id=1025042379]
-position = Vector2(305, 80)
+position = Vector2(281, -30)
 shape = SubResource("RectangleShape2D_2")
 
 [node name="Bounds" parent="." unique_id=175198438 instance=ExtResource("8")]
+position = Vector2(352, 162)
 
 [node name="Player" parent="." unique_id=1587195847 instance=ExtResource("2")]
-position = Vector2(60, 120)
+position = Vector2(83, 342)
 
-[node name="EnemyA" parent="." instance=ExtResource("9")]
-position = Vector2(165, 120)
+[node name="EnemyA" parent="." unique_id=830324945 instance=ExtResource("9")]
+position = Vector2(149, 162)
 
-[node name="EnemyB" parent="." instance=ExtResource("9")]
-position = Vector2(305, 55)
+[node name="EnemyB" parent="." unique_id=1096084113 instance=ExtResource("9")]
+position = Vector2(314, 342)
+
+[node name="BounceOrb1" parent="." instance=ExtResource("10")]
+position = Vector2(260, 357)
 
 [node name="Packet1" parent="." unique_id=176199604 instance=ExtResource("5")]
-position = Vector2(115, 120)
+position = Vector2(183, 196)
 
 [node name="Packet2" parent="." unique_id=1259679429 instance=ExtResource("5")]
-position = Vector2(305, 50)
+position = Vector2(395, 162)
 
 [node name="ToLevel02" parent="." unique_id=850438709 instance=ExtResource("6")]
-position = Vector2(345, 115)
+position = Vector2(74, 162)
 target_scene = "res://scenes/Level02.tscn"
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=1965983166]
 
 [node name="Intro" type="Label" parent="UI" unique_id=825505876]
-offset_left = 8.0
-offset_top = 8.0
-text = "CYBER BUG
-Collect packets → inject bugs"
+offset_left = 225.0
+offset_right = 450.0
+offset_bottom = 49.0
+text = "              CYBER BUG"
 
 [node name="Stats" type="Label" parent="UI" unique_id=1692865136]
-offset_left = 8.0
-offset_top = 44.0
+offset_left = 7.0
+offset_top = 11.0
+offset_right = 73.0
+offset_bottom = 65.0
 text = "HP:"
 script = ExtResource("7")

@@ -1,4 +1,4 @@
-[gd_scene format=3 uid="uid://c4tqk1eod2y1p"]
+[gd_scene format=3]
 
 [ext_resource type="Script" path="res://scripts/bounce_orb.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/bounce_orb.svg" id="2"]
