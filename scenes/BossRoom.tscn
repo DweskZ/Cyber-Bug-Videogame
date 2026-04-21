@@ -1,12 +1,12 @@
 [gd_scene format=3 uid="uid://woeimwxv6qhx"]
 
-[ext_resource type="Script" path="res://scripts/level_entry.gd" id="1"]
-[ext_resource type="PackedScene" path="res://scenes/PlayerPlatformer.tscn" id="2"]
+[ext_resource type="Script" uid="uid://dy7frprvtj7dh" path="res://scripts/level_entry.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://brqlgxm2qu41f" path="res://scenes/PlayerPlatformer.tscn" id="2"]
 [ext_resource type="PackedScene" path="res://scenes/OpenClawBoss.tscn" id="3"]
 [ext_resource type="PackedScene" path="res://scenes/Background.tscn" id="4"]
-[ext_resource type="PackedScene" path="res://scenes/LevelBounds.tscn" id="5"]
-[ext_resource type="Texture2D" path="res://assets/platform_tex.png" id="6"]
-[ext_resource type="Script" path="res://scripts/hud.gd" id="7"]
+[ext_resource type="PackedScene" uid="uid://tvy7rcn4br8o" path="res://scenes/LevelBounds.tscn" id="5"]
+[ext_resource type="Texture2D" uid="uid://dhdqellqtgc58" path="res://assets/platform_tex.png" id="6"]
+[ext_resource type="Script" uid="uid://d0k0jatf84o1" path="res://scripts/hud.gd" id="7"]
 [ext_resource type="PackedScene" path="res://scenes/BounceOrb.tscn" id="8"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_floor"]
@@ -21,16 +21,16 @@ size = Vector2(160, 16)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_p120"]
 size = Vector2(120, 16)
 
-[node name="BossRoom" type="Node2D"]
+[node name="BossRoom" type="Node2D" unique_id=79849371]
 script = ExtResource("1")
 reset_run_on_enter = false
 
-[node name="BG" parent="." instance=ExtResource("4")]
+[node name="BG" parent="." unique_id=1580198417 instance=ExtResource("4")]
 
-[node name="Art" type="Node2D" parent="."]
+[node name="Art" type="Node2D" parent="." unique_id=1657288648]
 position = Vector2(183, 108)
 
-[node name="FloorSprite" type="Sprite2D" parent="Art"]
+[node name="FloorSprite" type="Sprite2D" parent="Art" unique_id=2140044275]
 texture_repeat = 2
 position = Vector2(139, 269)
 scale = Vector2(1.58, 2.1)
@@ -38,71 +38,67 @@ texture = ExtResource("6")
 region_enabled = true
 region_rect = Rect2(0, 0, 520, 20)
 
-[node name="PlatformSprite1" type="Sprite2D" parent="Art"]
+[node name="PlatformSprite1" type="Sprite2D" parent="Art" unique_id=267173615]
 texture_repeat = 2
-position = Vector2(90, 108)
+position = Vector2(138, -2)
 texture = ExtResource("6")
 region_enabled = true
 region_rect = Rect2(0, 0, 180, 16)
 
-[node name="PlatformSprite2" type="Sprite2D" parent="Art"]
+[node name="PlatformSprite2" type="Sprite2D" parent="Art" unique_id=385919563]
 texture_repeat = 2
 position = Vector2(300, 78)
 texture = ExtResource("6")
 region_enabled = true
 region_rect = Rect2(0, 0, 160, 16)
 
-[node name="PlatformSprite3" type="Sprite2D" parent="Art"]
+[node name="PlatformSprite3" type="Sprite2D" parent="Art" unique_id=885524369]
 texture_repeat = 2
-position = Vector2(-40, 68)
+position = Vector2(-55, 60)
 texture = ExtResource("6")
 region_enabled = true
 region_rect = Rect2(0, 0, 120, 16)
 
-[node name="World" type="StaticBody2D" parent="."]
+[node name="World" type="StaticBody2D" parent="." unique_id=550294025]
 position = Vector2(83, 216)
-collision_layer = 1
-collision_mask = 1
 
-[node name="Floor" type="CollisionShape2D" parent="World"]
+[node name="Floor" type="CollisionShape2D" parent="World" unique_id=1405536286]
 position = Vector2(238, 149)
 shape = SubResource("RectangleShape2D_floor")
 
-[node name="Platform1" type="CollisionShape2D" parent="World"]
-position = Vector2(170, 0)
+[node name="Platform1" type="CollisionShape2D" parent="World" unique_id=1956955930]
+position = Vector2(240, -113)
 shape = SubResource("RectangleShape2D_p180")
 
-[node name="Platform2" type="CollisionShape2D" parent="World"]
+[node name="Platform2" type="CollisionShape2D" parent="World" unique_id=865877445]
 position = Vector2(420, -30)
 shape = SubResource("RectangleShape2D_p160")
 
-[node name="Platform3" type="CollisionShape2D" parent="World"]
+[node name="Platform3" type="CollisionShape2D" parent="World" unique_id=2136511283]
 position = Vector2(40, -45)
 shape = SubResource("RectangleShape2D_p120")
 
-[node name="Bounds" parent="." instance=ExtResource("5")]
+[node name="Bounds" parent="." unique_id=1251057442 instance=ExtResource("5")]
 position = Vector2(352, 162)
 
-[node name="Player" parent="." instance=ExtResource("2")]
-position = Vector2(83, 342)
+[node name="Player" parent="." unique_id=857119849 instance=ExtResource("2")]
+position = Vector2(170, 342)
 
-[node name="Boss" parent="." instance=ExtResource("3")]
-position = Vector2(610, 300)
+[node name="Boss" parent="." unique_id=179378788 instance=ExtResource("3")]
+position = Vector2(470, 300)
 enable_swipe = false
 
-[node name="PogoOrbL" parent="." instance=ExtResource("8")]
-position = Vector2(280, 270)
+[node name="PogoOrbL" parent="." unique_id=63800819 instance=ExtResource("8")]
+position = Vector2(330, 270)
 collision_layer = 2
-collision_mask = 0
 
-[node name="PogoOrbR" parent="." instance=ExtResource("8")]
-position = Vector2(500, 270)
+[node name="PogoOrbR" parent="." unique_id=602481314 instance=ExtResource("8")]
+position = Vector2(520, 270)
 collision_layer = 2
-collision_mask = 0
 
-[node name="UI" type="CanvasLayer" parent="."]
+[node name="UI" type="CanvasLayer" parent="." unique_id=935258095]
 
-[node name="Stats" type="Label" parent="UI"]
+[node name="Stats" type="Label" parent="UI" unique_id=934233719]
 offset_left = 8.0
 offset_top = 8.0
 text = "HP:"
