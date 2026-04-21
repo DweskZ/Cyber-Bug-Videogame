@@ -1,4 +1,4 @@
-extends StaticBody2D
+extends Area2D
 class_name BounceOrb
 
 @export var bounce_velocity := -520.0
@@ -6,13 +6,12 @@ class_name BounceOrb
 @export var require_down_attack := true
 @export var cooldown := 0.05
 
-@onready var trigger: Area2D = $Trigger
 @onready var sprite: Node2D = $Sprite2D
 
 var _cooldown_t := 0.0
 
 func _ready() -> void:
-	trigger.body_entered.connect(_on_body_entered)
+	body_entered.connect(_on_body_entered)
 
 func _physics_process(delta: float) -> void:
 	if _cooldown_t > 0.0:
