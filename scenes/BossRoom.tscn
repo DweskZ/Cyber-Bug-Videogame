@@ -1,94 +1,109 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene format=3 uid="uid://woeimwxv6qhx"]
 
-[ext_resource type="PackedScene" path="res://scenes/PlayerPlatformer.tscn" id="1"]
-[ext_resource type="PackedScene" path="res://scenes/OpenClawBoss.tscn" id="2"]
-[ext_resource type="Texture2D" path="res://assets/platform_tex.png" id="3"]
-[ext_resource type="Script" path="res://scripts/hud.gd" id="4"]
+[ext_resource type="Script" path="res://scripts/level_entry.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/PlayerPlatformer.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/OpenClawBoss.tscn" id="3"]
+[ext_resource type="PackedScene" path="res://scenes/Background.tscn" id="4"]
 [ext_resource type="PackedScene" path="res://scenes/LevelBounds.tscn" id="5"]
-[ext_resource type="PackedScene" path="res://scenes/Background.tscn" id="6"]
+[ext_resource type="Texture2D" path="res://assets/platform_tex.png" id="6"]
+[ext_resource type="Script" path="res://scripts/hud.gd" id="7"]
+[ext_resource type="PackedScene" path="res://scenes/BounceOrb.tscn" id="8"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_1"]
-size = Vector2(520, 20)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_floor"]
+size = Vector2(820, 20)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_2"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p180"]
 size = Vector2(180, 16)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_3"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p160"]
 size = Vector2(160, 16)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_4"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_p120"]
 size = Vector2(120, 16)
 
 [node name="BossRoom" type="Node2D"]
+script = ExtResource("1")
+reset_run_on_enter = false
 
-[node name="BG" parent="." instance=ExtResource("6")]
+[node name="BG" parent="." instance=ExtResource("4")]
 
 [node name="Art" type="Node2D" parent="."]
+position = Vector2(183, 108)
 
 [node name="FloorSprite" type="Sprite2D" parent="Art"]
-texture = ExtResource("3")
-position = Vector2(160, 150)
-scale = Vector2(1, 1)
 texture_repeat = 2
+position = Vector2(139, 269)
+scale = Vector2(1.58, 2.1)
+texture = ExtResource("6")
 region_enabled = true
 region_rect = Rect2(0, 0, 520, 20)
 
 [node name="PlatformSprite1" type="Sprite2D" parent="Art"]
-texture = ExtResource("3")
-position = Vector2(150, 115)
-scale = Vector2(1, 1)
 texture_repeat = 2
+position = Vector2(90, 108)
+texture = ExtResource("6")
 region_enabled = true
 region_rect = Rect2(0, 0, 180, 16)
 
 [node name="PlatformSprite2" type="Sprite2D" parent="Art"]
-texture = ExtResource("3")
-position = Vector2(240, 90)
-scale = Vector2(1, 1)
 texture_repeat = 2
+position = Vector2(300, 78)
+texture = ExtResource("6")
 region_enabled = true
 region_rect = Rect2(0, 0, 160, 16)
 
 [node name="PlatformSprite3" type="Sprite2D" parent="Art"]
-texture = ExtResource("3")
-position = Vector2(90, 80)
-scale = Vector2(1, 1)
 texture_repeat = 2
+position = Vector2(-40, 68)
+texture = ExtResource("6")
 region_enabled = true
 region_rect = Rect2(0, 0, 120, 16)
 
 [node name="World" type="StaticBody2D" parent="."]
+position = Vector2(83, 216)
 collision_layer = 1
 collision_mask = 1
 
 [node name="Floor" type="CollisionShape2D" parent="World"]
-position = Vector2(160, 150)
-shape = SubResource("RectangleShape2D_1")
+position = Vector2(238, 149)
+shape = SubResource("RectangleShape2D_floor")
 
 [node name="Platform1" type="CollisionShape2D" parent="World"]
-position = Vector2(150, 115)
-shape = SubResource("RectangleShape2D_2")
+position = Vector2(170, 0)
+shape = SubResource("RectangleShape2D_p180")
 
 [node name="Platform2" type="CollisionShape2D" parent="World"]
-position = Vector2(240, 90)
-shape = SubResource("RectangleShape2D_3")
+position = Vector2(420, -30)
+shape = SubResource("RectangleShape2D_p160")
 
 [node name="Platform3" type="CollisionShape2D" parent="World"]
-position = Vector2(90, 80)
-shape = SubResource("RectangleShape2D_4")
+position = Vector2(40, -45)
+shape = SubResource("RectangleShape2D_p120")
 
 [node name="Bounds" parent="." instance=ExtResource("5")]
+position = Vector2(352, 162)
 
-[node name="Player" parent="." instance=ExtResource("1")]
-position = Vector2(60, 120)
+[node name="Player" parent="." instance=ExtResource("2")]
+position = Vector2(83, 342)
 
-[node name="Boss" parent="." instance=ExtResource("2")]
-position = Vector2(260, 120)
+[node name="Boss" parent="." instance=ExtResource("3")]
+position = Vector2(610, 300)
+enable_swipe = false
+
+[node name="PogoOrbL" parent="." instance=ExtResource("8")]
+position = Vector2(280, 270)
+collision_layer = 2
+collision_mask = 0
+
+[node name="PogoOrbR" parent="." instance=ExtResource("8")]
+position = Vector2(500, 270)
+collision_layer = 2
+collision_mask = 0
 
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="Stats" type="Label" parent="UI"]
 offset_left = 8.0
 offset_top = 8.0
-script = ExtResource("4")
 text = "HP:"
+script = ExtResource("7")
