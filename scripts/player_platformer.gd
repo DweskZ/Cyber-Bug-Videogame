@@ -25,6 +25,9 @@ const PLAYER_FRAME_H := 128
 @export var jump_buffer_time := 0.12
 @export var jump_cut_multiplier := 0.45
 
+# Down-attack pogo tuning. NOTE: jump_velocity is negative, so values > 1.0 bounce higher.
+@export var pogo_bounce_multiplier := 0.85
+
 @export var max_hp := 5
 @export var invincibility_time := 0.60
 
@@ -212,7 +215,7 @@ func _on_slash_body_entered(body: Node) -> void:
 
 	# Down-slash pogo bounce (HK-style)
 	if _attack_mode == 1 and not _pogo_used:
-		velocity.y = jump_velocity * 0.85
+		velocity.y = jump_velocity * pogo_bounce_multiplier
 		_pogo_used = true
 
 	_camera_bump(1.2)
