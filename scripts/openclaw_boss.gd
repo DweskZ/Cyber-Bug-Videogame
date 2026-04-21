@@ -3,14 +3,13 @@ class_name OpenClawBoss
 
 const SPRITESHEET_ANIM := preload("res://scripts/spritesheet_anim.gd")
 
-# OpenClaw boss sprites (packed strips, no blank frames, faster to render).
-# We can optionally compute stable offsets at load-time to prevent sliding.
-const SHEET_IDLE: Texture2D = preload("res://assets/spritesheets/openclwaboss_downloads_nobg/openclawboss_idle_strip.png")
-const SHEET_SWIPE: Texture2D = preload("res://assets/spritesheets/openclwaboss_downloads_nobg/openclawboss_swipe_strip.png")
-const SHEET_SLAM: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed_aligned_pf/openclawboss_slam_strip_aligned_pf.png")
-const SHEET_HURT: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed_aligned_pf/openclawboss_hurt_strip_aligned_pf.png")
-const SHEET_DEATH: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed_aligned_pf/openclawboss_death_strip_aligned_pf.png")
-const SHEET_LASER: Texture2D = preload("res://assets/spritesheets/openclwaboss_final_packed_aligned_pf/openclawboss_laser_strip_aligned_pf.png")
+# OpenClaw boss sprites (cleaned background, fixed canvas per frame, no trimming).
+const SHEET_IDLE: Texture2D = preload("res://assets/spritesheets/openclwaboss_cleaned/openclawboss_idle_strip.png")
+const SHEET_SWIPE: Texture2D = preload("res://assets/spritesheets/openclwaboss_cleaned/openclawboss_swipe_strip.png")
+const SHEET_SLAM: Texture2D = preload("res://assets/spritesheets/openclwaboss_cleaned/openclawboss_slam_strip.png")
+const SHEET_HURT: Texture2D = preload("res://assets/spritesheets/openclwaboss_cleaned/openclawboss_hurt_strip.png")
+const SHEET_DEATH: Texture2D = preload("res://assets/spritesheets/openclwaboss_cleaned/openclawboss_death_strip.png")
+const SHEET_LASER: Texture2D = preload("res://assets/spritesheets/openclwaboss_cleaned/openclawboss_laser_strip.png")
 
 const IDLE_FRAMES := 8
 const SWIPE_FRAMES := 8
