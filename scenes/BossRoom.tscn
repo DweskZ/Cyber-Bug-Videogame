@@ -81,6 +81,13 @@ shape = SubResource("RectangleShape2D_p120")
 [node name="Bounds" parent="." unique_id=1251057442 instance=ExtResource("5")]
 position = Vector2(352, 162)
 
+[node name="ArenaCamera" type="Camera2D" parent="."]
+position = Vector2(352, 190)
+zoom = Vector2(1.05, 1.05)
+priority = 10
+position_smoothing_enabled = true
+position_smoothing_speed = 6.0
+
 [node name="Player" parent="." unique_id=857119849 instance=ExtResource("2")]
 position = Vector2(170, 342)
 
