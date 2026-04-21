@@ -197,6 +197,9 @@ func _attack() -> void:
 	await get_tree().create_timer(attack_cooldown).timeout
 	_can_attack = true
 
+func reset_pogo() -> void:
+	_pogo_used = false
+
 func _on_slash_body_entered(body: Node) -> void:
 	var kb := Vector2(_facing * 220.0, -80.0)
 	if _attack_mode == 1:
