@@ -26,7 +26,7 @@ const PLAYER_FRAME_H := 128
 @export var jump_cut_multiplier := 0.45
 
 # Down-attack pogo tuning. NOTE: jump_velocity is negative, so values > 1.0 bounce higher.
-@export var pogo_bounce_multiplier := 0.85
+@export_range(0.2, 2.0, 0.05) var pogo_bounce_multiplier := 1.20
 
 @export var max_hp := 5
 @export var invincibility_time := 0.60
