@@ -27,7 +27,7 @@ const LASER_FRAMES := 4
 @export var visual_scale := 0.19
 
 # Visual node placement (tweak to align sprite with collision hitbox)
-@export var sprite_visual_pos := Vector2(0, -18)
+@export var sprite_visual_pos := Vector2(0, -10)
 
 # If true, compute stable offsets from alpha to keep the sprite anchored.
 # Implementation uses an intersection-rect anchor to avoid "weapon-driven" sliding.
@@ -83,6 +83,8 @@ var _dying := false
 var _state := "idle"
 var _t := 0.0
 
+var _player_collision_exception_set := false
+
 # Per-frame visual offsets (computed from alpha), optional.
 var _frame_offsets := {} # StringName -> PackedVector2Array
 
@@ -121,6 +123,11 @@ func _physics_process(delta: float) -> void:
 		velocity.y += gravity * delta
 
 	var player := get_tree().current_scene.get_node_or_null("Player") as PlayerPlatformer
+	# Prevent the player body from physically blocking/standing on the boss.
+	# We still damage the player via the boss Areas (Swipe/Laser/Slam + touch).
+	if player != null and not _player_collision_exception_set:
+		add_collision_exception_with(player)
+		_player_collision_exception_set = true
 	# Lock facing during attacks to avoid visual "sliding" when the player crosses sides mid-action.
 	if player != null and _state == "idle" and _t <= 0.0:
 		_facing = int(sign(player.global_position.x - global_position.x))
