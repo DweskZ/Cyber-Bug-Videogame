@@ -1,7 +1,22 @@
 extends StaticBody2D
 class_name BounceOrb
 
-@onready var sprite: Node2D = $Sprite2D
+const SPRITESHEET_ANIM := preload("res://scripts/spritesheet_anim.gd")
+const SHEET_ORB: Texture2D = preload("res://assets/spritesheets/pogo_orb_strip_512x128.png")
+
+const FRAME_W := 128
+const FRAME_H := 128
+const FRAMES := 4
+
+@onready var sprite: AnimatedSprite2D = $Sprite2D
+
+func _ready() -> void:
+	if sprite == null:
+		return
+	var frames := SpriteFrames.new()
+	SPRITESHEET_ANIM.add_strip(frames, "idle", SHEET_ORB, FRAME_W, FRAME_H, FRAMES, 10.0, true)
+	sprite.sprite_frames = frames
+	sprite.play("idle")
 
 func pulse() -> void:
 	if sprite == null:
