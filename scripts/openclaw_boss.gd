@@ -44,7 +44,7 @@ const LASER_FRAMES := 4
 @export var touch_damage := 2
 
 # Death pacing (let the death anim read before KernelEnding)
-@export var death_hold_seconds := 1.8
+@export var death_hold_seconds := 2.8
 
 # Server loop: boss is only damageable during the Hurt window.
 @export var enable_server_loop := true
