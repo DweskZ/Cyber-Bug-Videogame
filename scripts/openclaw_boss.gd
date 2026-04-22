@@ -20,7 +20,7 @@ const DEATH_FRAMES := 4
 const LASER_FRAMES := 4
 
 @export var gravity := 980.0
-@export var max_hp := 25
+@export var max_hp := 10
 @export var move_speed := 70.0
 
 # Scale for 512px frames. Target: ~3x the player (player is 128px @ 0.25 scale).
