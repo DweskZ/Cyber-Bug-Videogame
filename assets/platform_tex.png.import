@@ -23,12 +23,10 @@ compress/rdo_quality_loss=0.0
 compress/hdr_compression=1
 compress/normal_map=0
 compress/channel_pack=0
-
 # Enable tiling when sampling outside 0..1 (required for Sprite2D.region + texture_repeat).
 flags/repeat=1
 # Pixel-art friendly (avoid blur).
 flags/filter=false
-
 mipmaps/generate=false
 mipmaps/limit=-1
 roughness/mode=0

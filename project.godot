@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Meetup"
-run/main_scene="res://scenes/Level01.tscn"
+run/main_scene="res://scenes/StartMenu.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 
@@ -34,7 +34,6 @@ window/stretch/mode="canvas_items"
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
-
 # Pixel art stability (reduces jitter/"sliding" from sub-pixel transforms).
 2d/snap/snap_2d_transforms_to_pixel=true
 2d/snap/snap_2d_vertices_to_pixel=true
