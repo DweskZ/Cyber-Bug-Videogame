@@ -3,8 +3,6 @@ class_name OpenClawBoss
 
 const SPRITESHEET_ANIM := preload("res://scripts/spritesheet_anim.gd")
 
-const SERVER_SCENE: PackedScene = preload("res://scenes/BossServer.tscn")
-
 # OpenClaw boss sprites (processed, already transparent).
 # 4-frame horizontal strips: 2048x512 (512x512 per frame).
 const SHEET_IDLE: Texture2D = preload("res://assets/spritesheets/openclawboss_processed/openclawboss_walk_strip.png")
@@ -50,8 +48,7 @@ const LASER_FRAMES := 4
 
 # Server loop: boss is only damageable during the Hurt window.
 @export var enable_server_loop := true
-@export var servers_per_cycle := 3
-@export var server_spawn_offsets: Array[Vector2] = [Vector2(-140, -60), Vector2(0, -120), Vector2(140, -60)]
+@export var server_group_name := "boss_servers"
 @export_range(1.0, 8.0, 0.25) var hurt_stun_seconds := 3.5
 
 # Attack tuning
@@ -460,36 +457,41 @@ func _apply_visual_offset() -> void:
 
 func _start_server_cycle() -> void:
 	_damageable = false
-	_spawn_servers()
-
-func _spawn_servers() -> void:
-	_clear_servers()
-	var parent := get_parent()
-	if parent == null:
+	_refresh_servers()
+	if _servers.size() == 0:
+		# No placed servers in the scene, fallback to normal damage.
+		_damageable = true
 		return
-	var count := min(servers_per_cycle, server_spawn_offsets.size())
-	for i in range(count):
-		var inst := SERVER_SCENE.instantiate() as BossServer
-		if inst == null:
-			continue
-		parent.add_child(inst)
-		inst.global_position = global_position + server_spawn_offsets[i]
-		inst.destroyed.connect(_on_server_destroyed)
-		_servers.append(inst)
+	_reset_servers()
 
-func _clear_servers() -> void:
+func _refresh_servers() -> void:
+	_servers.clear()
+	if not is_inside_tree():
+		return
+	var nodes := get_tree().get_nodes_in_group(server_group_name)
+	for n in nodes:
+		var s := n as BossServer
+		if s == null:
+			continue
+		# Ensure we only connect once.
+		if not s.destroyed.is_connected(_on_server_destroyed):
+			s.destroyed.connect(_on_server_destroyed)
+		_servers.append(s)
+
+func _reset_servers() -> void:
 	for s in _servers:
 		if is_instance_valid(s):
-			s.queue_free()
-	_servers.clear()
+			s.reset_server()
+
+func _all_servers_down() -> bool:
+	for s in _servers:
+		if is_instance_valid(s) and s.active:
+			return false
+	return true
 
 func _on_server_destroyed(server: BossServer) -> void:
-	# Remove from list.
-	for i in range(_servers.size() - 1, -1, -1):
-		if _servers[i] == server or not is_instance_valid(_servers[i]):
-			_servers.remove_at(i)
-	# When all servers are gone, boss becomes vulnerable for a short hurt/stun window.
-	if _servers.size() == 0:
+	# When all placed servers are down, boss becomes vulnerable for a short hurt/stun window.
+	if _all_servers_down():
 		_enter_hurt_stun()
 
 func _enter_hurt_stun() -> void:
@@ -506,7 +508,7 @@ func _end_hurt_stun() -> void:
 	_damageable = false
 	_state = "idle"
 	_t = 0.35
-	_spawn_servers()
+	_reset_servers()
 
 func _start_attack(kind: String, windup: float) -> void:
 	scale = Vector2.ONE
