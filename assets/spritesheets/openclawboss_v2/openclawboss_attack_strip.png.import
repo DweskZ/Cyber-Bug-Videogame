@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://v8qu8bh2ypye"
-path="res://.godot/imported/openclawboss_slam_strip.png-4f01911c387cf3483a1be7be8208b078.ctex"
+uid="uid://bk0qafad6g6lf"
+path="res://.godot/imported/openclawboss_attack_strip.png-dabfa4e64b5cdc8de549ad6d502396a5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/spritesheets/openclwaboss_cleaned/openclawboss_slam_strip.png"
-dest_files=["res://.godot/imported/openclawboss_slam_strip.png-4f01911c387cf3483a1be7be8208b078.ctex"]
+source_file="res://assets/spritesheets/openclawboss_v2/openclawboss_attack_strip.png"
+dest_files=["res://.godot/imported/openclawboss_attack_strip.png-dabfa4e64b5cdc8de549ad6d502396a5.ctex"]
 
 [params]
 

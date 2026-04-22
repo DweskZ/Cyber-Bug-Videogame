@@ -2,19 +2,19 @@ extends Node2D
 
 # Quick visual harness to verify boss sprite anchoring without gameplay/physics noise.
 
-const SHEET_IDLE: Texture2D = preload("res://assets/spritesheets/openclwaboss_cleaned_padded/openclawboss_idle_strip.png")
-const SHEET_SWIPE: Texture2D = preload("res://assets/spritesheets/openclwaboss_cleaned_padded/openclawboss_swipe_strip.png")
-const SHEET_SLAM: Texture2D = preload("res://assets/spritesheets/openclwaboss_cleaned_padded/openclawboss_slam_strip.png")
-const SHEET_HURT: Texture2D = preload("res://assets/spritesheets/openclwaboss_cleaned_padded/openclawboss_hurt_strip.png")
-const SHEET_DEATH: Texture2D = preload("res://assets/spritesheets/openclwaboss_cleaned_padded/openclawboss_death_strip.png")
-const SHEET_LASER: Texture2D = preload("res://assets/spritesheets/openclwaboss_cleaned_padded/openclawboss_laser_strip.png")
+const SHEET_WALK: Texture2D = preload("res://assets/spritesheets/openclawboss_v2/openclawboss_walk_strip.png")
+const SHEET_SWIPE: Texture2D = preload("res://assets/spritesheets/openclawboss_v2/openclawboss_attack_strip.png")
+const SHEET_SLAM: Texture2D = preload("res://assets/spritesheets/openclawboss_v2/openclawboss_slam_strip.png")
+const SHEET_HURT: Texture2D = preload("res://assets/spritesheets/openclawboss_v2/openclawboss_hurt_strip.png")
+const SHEET_DEATH: Texture2D = preload("res://assets/spritesheets/openclawboss_v2/openclawboss_death_strip.png")
+const SHEET_LASER: Texture2D = preload("res://assets/spritesheets/openclawboss_v2/openclawboss_laser_strip.png")
 
-const IDLE_FRAMES := 8
-const SWIPE_FRAMES := 8
+const WALK_FRAMES := 4
+const SWIPE_FRAMES := 4
 const SLAM_FRAMES := 4
-const HURT_FRAMES := 3
-const DEATH_FRAMES := 7
-const LASER_FRAMES := 3
+const HURT_FRAMES := 4
+const DEATH_FRAMES := 4
+const LASER_FRAMES := 4
 
 @export var preview_scale := 0.10
 @export var fps_idle := 8.0
@@ -28,7 +28,15 @@ const LASER_FRAMES := 3
 
 func _ready() -> void:
 	var frames := SpriteFrames.new()
-	_add_strip(frames, "idle", SHEET_IDLE, IDLE_FRAMES, fps_idle, true)
+	# idle = first frame of walk
+	var walk_img := SHEET_WALK.get_image()
+	if walk_img != null:
+		var fw := int(walk_img.get_width() / WALK_FRAMES)
+		var fh := int(walk_img.get_height())
+		walk_img.convert(Image.FORMAT_RGBA8)
+		var sub := walk_img.get_region(Rect2i(0, 0, fw, fh))
+		_add_single(frames, "idle", ImageTexture.create_from_image(sub), fps_idle, true)
+	_add_strip(frames, "walk", SHEET_WALK, WALK_FRAMES, fps_idle, true)
 	_add_strip(frames, "swipe", SHEET_SWIPE, SWIPE_FRAMES, fps_swipe, true)
 	_add_strip(frames, "slam", SHEET_SLAM, SLAM_FRAMES, fps_slam, true)
 	_add_strip(frames, "laser", SHEET_LASER, LASER_FRAMES, fps_laser, true)
@@ -41,6 +49,7 @@ func _ready() -> void:
 func _cycle() -> void:
 	while true:
 		await _play_for("idle", 0.8)
+		await _play_for("walk", 0.8)
 		await _play_for("swipe", 0.8)
 		await _play_for("slam", 0.8)
 		await _play_for("laser", 0.8)
@@ -66,3 +75,11 @@ func _add_strip(frames: SpriteFrames, anim: String, sheet: Texture2D, frame_coun
 		var r := Rect2i(i * fw, 0, fw, fh)
 		var sub := img.get_region(r)
 		frames.add_frame(anim, ImageTexture.create_from_image(sub))
+
+func _add_single(frames: SpriteFrames, anim: String, tex: Texture2D, fps: float, loop: bool) -> void:
+	if not frames.has_animation(anim):
+		frames.add_animation(anim)
+	frames.set_animation_speed(anim, fps)
+	frames.set_animation_loop(anim, loop)
+	if tex != null:
+		frames.add_frame(anim, tex)

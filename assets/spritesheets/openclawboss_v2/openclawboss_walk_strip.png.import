@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c7ix3a8sp1peq"
-path="res://.godot/imported/openclawboss_idle_strip.png-95fd007571f46f44fbba02ffd769447b.ctex"
+uid="uid://1javjkydknub"
+path="res://.godot/imported/openclawboss_walk_strip.png-558d2eb573b0b4c424197d858beac2d5.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/spritesheets/openclwaboss_cleaned/openclawboss_idle_strip.png"
-dest_files=["res://.godot/imported/openclawboss_idle_strip.png-95fd007571f46f44fbba02ffd769447b.ctex"]
+source_file="res://assets/spritesheets/openclawboss_v2/openclawboss_walk_strip.png"
+dest_files=["res://.godot/imported/openclawboss_walk_strip.png-558d2eb573b0b4c424197d858beac2d5.ctex"]
 
 [params]
 

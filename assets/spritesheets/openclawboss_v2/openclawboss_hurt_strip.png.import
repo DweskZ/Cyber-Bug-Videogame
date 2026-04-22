@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://tglhxkhg80i"
-path="res://.godot/imported/openclawboss_swipe_strip.png-d9f09bace832de1351c84691a15e20f6.ctex"
+uid="uid://bu0vek7rng35y"
+path="res://.godot/imported/openclawboss_hurt_strip.png-443661f0a719f8cdffd7093b8960e377.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/spritesheets/openclwaboss_cleaned/openclawboss_swipe_strip.png"
-dest_files=["res://.godot/imported/openclawboss_swipe_strip.png-d9f09bace832de1351c84691a15e20f6.ctex"]
+source_file="res://assets/spritesheets/openclawboss_v2/openclawboss_hurt_strip.png"
+dest_files=["res://.godot/imported/openclawboss_hurt_strip.png-443661f0a719f8cdffd7093b8960e377.ctex"]
 
 [params]
 
