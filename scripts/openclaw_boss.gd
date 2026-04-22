@@ -153,7 +153,8 @@ func _physics_process(delta: float) -> void:
 		move_and_slide()
 		return
 	# Lock facing during attacks to avoid visual "sliding" when the player crosses sides mid-action.
-	if player != null and _state == "idle" and _t <= 0.0:
+	# In idle we can update every frame so the boss doesn't get stuck walking one direction.
+	if player != null and _state == "idle":
 		_facing = int(sign(player.global_position.x - global_position.x))
 		if _facing == 0:
 			_facing = -1
