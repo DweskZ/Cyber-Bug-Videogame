@@ -514,7 +514,13 @@ func take_damage(amount: int, knockback: Vector2 = Vector2.ZERO) -> void:
 		return
 	hp -= amount
 	if knockback != Vector2.ZERO:
-		velocity += knockback
+		# Boss is heavy: damp knockback so pogo/down-attack can't yeet it out of the arena.
+		var kb := knockback
+		kb.x = clampf(kb.x, -160.0, 160.0)
+		# Never push the boss downward (positive Y), prevents floor tunneling / getting shoved off-screen.
+		kb.y = minf(kb.y, 0.0)
+		kb.y = clampf(kb.y, -180.0, 0.0)
+		velocity += kb * 0.35
 	_flash(Color(2.0, 2.0, 2.0, 1.0))
 	if hp <= 0:
 		_dying = true
