@@ -14,7 +14,7 @@ const PLAYER_FRAME_W := 128
 const PLAYER_FRAME_H := 128
 
 # Visual tuning (the generated sheets are 128x128 frames, so we scale them down).
-@export var visual_scale := 0.25
+@export var visual_scale := 0.28
 
 @export var speed := 210.0
 @export var accel := 1800.0
