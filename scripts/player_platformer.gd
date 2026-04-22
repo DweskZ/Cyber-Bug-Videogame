@@ -14,7 +14,7 @@ const PLAYER_FRAME_W := 128
 const PLAYER_FRAME_H := 128
 
 # Visual tuning (the generated sheets are 128x128 frames, so we scale them down).
-@export var visual_scale := 0.28
+@export var visual_scale := 0.34
 
 @export var speed := 210.0
 @export var accel := 1800.0
@@ -175,10 +175,10 @@ func _attack() -> void:
 	# Position + orientation
 	slash_pivot.scale = Vector2.ONE
 	if down_attack:
-		slash_pivot.position = Vector2(0, 18)
+		slash_pivot.position = Vector2(0, 24)
 		slash_sprite.flip_h = false
 	else:
-		slash_pivot.position = Vector2(14.0 * float(_facing), _slash_base_pos.y)
+		slash_pivot.position = Vector2(18.0 * float(_facing), _slash_base_pos.y)
 		slash_sprite.flip_h = _facing < 0
 
 	# No slash VFX: now that we have proper attack frames, keep it hitbox-only.
