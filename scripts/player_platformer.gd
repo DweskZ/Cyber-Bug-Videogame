@@ -216,6 +216,10 @@ func _on_slash_body_entered(body: Node) -> void:
 		var boss := body as OpenClawBoss
 		boss.take_damage(damage, kb)
 		_spawn_hit_spark(boss.global_position + Vector2(_facing * 8.0, -10.0))
+	elif body is BossServer:
+		var server := body as BossServer
+		server.take_damage(damage, kb)
+		_spawn_hit_spark(server.global_position + Vector2(0.0, -8.0))
 	elif body is BounceOrb:
 		# Pogo orb: only bounces on down-attack.
 		if _attack_mode == 1 and not _pogo_used:

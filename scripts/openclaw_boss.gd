@@ -3,6 +3,8 @@ class_name OpenClawBoss
 
 const SPRITESHEET_ANIM := preload("res://scripts/spritesheet_anim.gd")
 
+const SERVER_SCENE: PackedScene = preload("res://scenes/BossServer.tscn")
+
 # OpenClaw boss sprites (processed, already transparent).
 # 4-frame horizontal strips: 2048x512 (512x512 per frame).
 const SHEET_IDLE: Texture2D = preload("res://assets/spritesheets/openclawboss_processed/openclawboss_walk_strip.png")
@@ -46,6 +48,12 @@ const LASER_FRAMES := 4
 # Death pacing (let the death anim read before KernelEnding)
 @export var death_hold_seconds := 1.8
 
+# Server loop: boss is only damageable during the Hurt window.
+@export var enable_server_loop := true
+@export var servers_per_cycle := 3
+@export var server_spawn_offsets: Array[Vector2] = [Vector2(-140, -60), Vector2(0, -120), Vector2(140, -60)]
+@export_range(1.0, 8.0, 0.25) var hurt_stun_seconds := 3.5
+
 # Attack tuning
 @export var enable_swipe := true
 @export var enable_laser := true
@@ -83,6 +91,9 @@ var _dying := false
 var _state := "idle"
 var _t := 0.0
 
+var _damageable := true
+var _servers: Array[BossServer] = []
+
 var _player_collision_exception_set := false
 
 # Per-frame visual offsets (computed from alpha), optional.
@@ -108,6 +119,9 @@ func _ready() -> void:
 	laser_area.body_entered.connect(_on_hitbox_body_entered)
 	slam_area.body_entered.connect(_on_hitbox_body_entered)
 
+	if enable_server_loop:
+		_start_server_cycle()
+
 func _physics_process(delta: float) -> void:
 	if _dying:
 		_disable_hitboxes()
@@ -128,6 +142,19 @@ func _physics_process(delta: float) -> void:
 	if player != null and not _player_collision_exception_set:
 		add_collision_exception_with(player)
 		_player_collision_exception_set = true
+
+	# Hurt/stun window: boss is fixed and vulnerable.
+	if _state == "hurt":
+		_disable_hitboxes()
+		velocity = Vector2.ZERO
+		_t -= delta
+		if sprite != null and sprite.animation != "hurt":
+			sprite.play("hurt")
+		_apply_visual_offset()
+		if _t <= 0.0 and enable_server_loop:
+			_end_hurt_stun()
+		move_and_slide()
+		return
 	# Lock facing during attacks to avoid visual "sliding" when the player crosses sides mid-action.
 	if player != null and _state == "idle" and _t <= 0.0:
 		_facing = int(sign(player.global_position.x - global_position.x))
@@ -139,6 +166,8 @@ func _physics_process(delta: float) -> void:
 	var desired_anim := "idle"
 	if _state.begins_with("swipe"):
 		desired_anim = "swipe"
+	elif _state == "hurt":
+		desired_anim = "hurt"
 	elif _state.begins_with("laser"):
 		desired_anim = "laser"
 	elif _state.begins_with("slam"):
@@ -429,6 +458,56 @@ func _apply_visual_offset() -> void:
 			tweak.x = -tweak.x
 		sprite.offset = tweak
 
+func _start_server_cycle() -> void:
+	_damageable = false
+	_spawn_servers()
+
+func _spawn_servers() -> void:
+	_clear_servers()
+	var parent := get_parent()
+	if parent == null:
+		return
+	var count := min(servers_per_cycle, server_spawn_offsets.size())
+	for i in range(count):
+		var inst := SERVER_SCENE.instantiate() as BossServer
+		if inst == null:
+			continue
+		parent.add_child(inst)
+		inst.global_position = global_position + server_spawn_offsets[i]
+		inst.destroyed.connect(_on_server_destroyed)
+		_servers.append(inst)
+
+func _clear_servers() -> void:
+	for s in _servers:
+		if is_instance_valid(s):
+			s.queue_free()
+	_servers.clear()
+
+func _on_server_destroyed(server: BossServer) -> void:
+	# Remove from list.
+	for i in range(_servers.size() - 1, -1, -1):
+		if _servers[i] == server or not is_instance_valid(_servers[i]):
+			_servers.remove_at(i)
+	# When all servers are gone, boss becomes vulnerable for a short hurt/stun window.
+	if _servers.size() == 0:
+		_enter_hurt_stun()
+
+func _enter_hurt_stun() -> void:
+	_state = "hurt"
+	_t = hurt_stun_seconds
+	_damageable = true
+	_disable_hitboxes()
+	velocity = Vector2.ZERO
+	if sprite != null and sprite.sprite_frames != null and sprite.sprite_frames.has_animation("hurt"):
+		sprite.play("hurt")
+	_apply_visual_offset()
+
+func _end_hurt_stun() -> void:
+	_damageable = false
+	_state = "idle"
+	_t = 0.35
+	_spawn_servers()
+
 func _start_attack(kind: String, windup: float) -> void:
 	scale = Vector2.ONE
 	_disable_hitboxes()
@@ -518,6 +597,10 @@ func _on_hitbox_body_entered(body: Node) -> void:
 
 func take_damage(amount: int, knockback: Vector2 = Vector2.ZERO) -> void:
 	if _dying:
+		return
+	if enable_server_loop and not _damageable:
+		# Shielded: only damageable during Hurt window.
+		_flash(Color(0.6, 0.85, 1.6, 1.0))
 		return
 	hp -= amount
 	if knockback != Vector2.ZERO:
