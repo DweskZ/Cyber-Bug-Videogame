@@ -3,28 +3,27 @@ class_name OpenClawBoss
 
 const SPRITESHEET_ANIM := preload("res://scripts/spritesheet_anim.gd")
 
-# OpenClaw boss sprites (v2, transparent background).
-# Each sheet is a 4-frame horizontal strip: 2048x512 (512x512 per frame).
-const SHEET_WALK: Texture2D = preload("res://assets/spritesheets/openclawboss_v2/openclawboss_walk_strip.png")
-const SHEET_SWIPE: Texture2D = preload("res://assets/spritesheets/openclawboss_v2/openclawboss_attack_strip.png")
-const SHEET_SLAM: Texture2D = preload("res://assets/spritesheets/openclawboss_v2/openclawboss_slam_strip.png")
-const SHEET_HURT: Texture2D = preload("res://assets/spritesheets/openclawboss_v2/openclawboss_hurt_strip.png")
-const SHEET_DEATH: Texture2D = preload("res://assets/spritesheets/openclawboss_v2/openclawboss_death_strip.png")
-const SHEET_LASER: Texture2D = preload("res://assets/spritesheets/openclawboss_v2/openclawboss_laser_strip.png")
+# OpenClaw boss sprites (cleaned background, fixed canvas per frame, no trimming).
+const SHEET_IDLE: Texture2D = preload("res://assets/spritesheets/openclwaboss_cleaned_padded/openclawboss_idle_strip.png")
+const SHEET_SWIPE: Texture2D = preload("res://assets/spritesheets/openclwaboss_cleaned_padded/openclawboss_swipe_strip.png")
+const SHEET_SLAM: Texture2D = preload("res://assets/spritesheets/openclwaboss_cleaned_padded/openclawboss_slam_strip.png")
+const SHEET_HURT: Texture2D = preload("res://assets/spritesheets/openclwaboss_cleaned_padded/openclawboss_hurt_strip.png")
+const SHEET_DEATH: Texture2D = preload("res://assets/spritesheets/openclwaboss_cleaned_padded/openclawboss_death_strip.png")
+const SHEET_LASER: Texture2D = preload("res://assets/spritesheets/openclwaboss_cleaned_padded/openclawboss_laser_strip.png")
 
-const WALK_FRAMES := 4
-const SWIPE_FRAMES := 4
+const IDLE_FRAMES := 8
+const SWIPE_FRAMES := 8
 const SLAM_FRAMES := 4
-const HURT_FRAMES := 4
-const DEATH_FRAMES := 4
-const LASER_FRAMES := 4
+const HURT_FRAMES := 3
+const DEATH_FRAMES := 7
+const LASER_FRAMES := 3
 
 @export var gravity := 980.0
 @export var max_hp := 25
 @export var move_speed := 70.0
 
-# Scales the 512px frames down to match the game scale.
-@export var visual_scale := 0.12
+# Scales the big sheets down to a similar on-screen size as the old 256x192 strips.
+@export var visual_scale := 0.055
 
 # Visual node placement (tweak to align sprite with collision hitbox)
 @export var sprite_visual_pos := Vector2(0, -32)
@@ -128,6 +127,20 @@ func _physics_process(delta: float) -> void:
 			_facing = -1
 	sprite.flip_h = _facing > 0
 
+	# Boss animation based on state
+	var desired_anim := "idle"
+	if _state.begins_with("swipe"):
+		desired_anim = "swipe"
+	elif _state.begins_with("laser"):
+		desired_anim = "laser"
+	elif _state.begins_with("slam"):
+		desired_anim = "slam"
+	if sprite.animation != desired_anim:
+		sprite.play(desired_anim)
+
+	# Apply per-frame offset (optional) + per-animation tweak.
+	_apply_visual_offset()
+
 	# State machine
 	if _state == "idle":
 		_disable_hitboxes()
@@ -201,51 +214,17 @@ func _physics_process(delta: float) -> void:
 			if _t <= 0.0:
 				_end_attack(slam_cooldown)
 
-	# Boss animation based on state + movement
-	var desired_anim := "idle"
-	if _state.begins_with("swipe"):
-		desired_anim = "swipe"
-	elif _state.begins_with("laser"):
-		desired_anim = "laser"
-	elif _state.begins_with("slam"):
-		desired_anim = "slam"
-	elif _state == "idle" and absf(velocity.x) > 1.0:
-		desired_anim = "walk"
-	if sprite.animation != desired_anim:
-		sprite.play(desired_anim)
-
-	# Apply per-frame offset (optional) + per-animation tweak.
-	_apply_visual_offset()
-
 	move_and_slide()
 
 func _setup_spriteframes() -> void:
 	var frames := SpriteFrames.new()
 
-	# Idle = first frame of the walk sheet (stable pose), walk = full strip.
-	var walk_sz := _frame_size_from_sheet(SHEET_WALK, WALK_FRAMES)
-	var walk_w := walk_sz.x
-	var walk_h := walk_sz.y
-	# idle
-	frames.add_animation("idle")
-	frames.set_animation_speed("idle", 1.0)
-	frames.set_animation_loop("idle", true)
-	var walk_img := SHEET_WALK.get_image()
-	if walk_img != null:
-		walk_img.convert(Image.FORMAT_RGBA8)
-		var sub_idle := walk_img.get_region(Rect2i(0, 0, walk_w, walk_h))
-		frames.add_frame("idle", ImageTexture.create_from_image(sub_idle))
-	# walk
-	_add_strip_baked(frames, "walk", SHEET_WALK, walk_w, walk_h, WALK_FRAMES, 8.0, true)
+	var idle_sz := _frame_size_from_sheet(SHEET_IDLE, IDLE_FRAMES)
+	var idle_w := idle_sz.x
+	var idle_h := idle_sz.y
+	_add_strip_baked(frames, "idle", SHEET_IDLE, idle_w, idle_h, IDLE_FRAMES, 8.0, true)
 	if use_auto_frame_offsets:
-		var walk_offsets := _compute_frame_offsets(SHEET_WALK, walk_w, walk_h, WALK_FRAMES)
-		_frame_offsets[&"walk"] = walk_offsets
-		# idle uses the first walk offset.
-		var idle_offsets := PackedVector2Array()
-		idle_offsets.resize(1)
-		if walk_offsets.size() > 0:
-			idle_offsets[0] = walk_offsets[0]
-		_frame_offsets[&"idle"] = idle_offsets
+		_frame_offsets[&"idle"] = _compute_frame_offsets(SHEET_IDLE, idle_w, idle_h, IDLE_FRAMES)
 
 	var swipe_sz := _frame_size_from_sheet(SHEET_SWIPE, SWIPE_FRAMES)
 	var swipe_w := swipe_sz.x
@@ -406,8 +385,6 @@ func _on_sprite_animation_changed() -> void:
 
 func _tweak_for_anim(anim: StringName) -> Vector2:
 	if anim == &"idle":
-		return offset_idle
-	if anim == &"walk":
 		return offset_idle
 	if anim == &"swipe":
 		return offset_swipe
