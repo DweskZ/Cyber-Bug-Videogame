@@ -1,13 +1,15 @@
 [gd_scene format=3 uid="uid://woeimwxv6qhx"]
 
 [ext_resource type="Script" uid="uid://dy7frprvtj7dh" path="res://scripts/level_entry.gd" id="1"]
-[ext_resource type="PackedScene" uid="uid://brqlgxm2qu41f" path="res://scenes/PlayerPlatformer.tscn" id="2"]
+[ext_resource type="PackedScene" path="res://scenes/PlayerPlatformer.tscn" id="2"]
 [ext_resource type="PackedScene" path="res://scenes/OpenClawBoss.tscn" id="3"]
 [ext_resource type="PackedScene" path="res://scenes/Background.tscn" id="4"]
 [ext_resource type="PackedScene" uid="uid://tvy7rcn4br8o" path="res://scenes/LevelBounds.tscn" id="5"]
 [ext_resource type="Texture2D" uid="uid://dhdqellqtgc58" path="res://assets/platform_tex.png" id="6"]
 [ext_resource type="Script" uid="uid://d0k0jatf84o1" path="res://scripts/hud.gd" id="7"]
 [ext_resource type="PackedScene" path="res://scenes/BounceOrb.tscn" id="8"]
+[ext_resource type="PackedScene" path="res://scenes/BossServer.tscn" id="9"]
+[ext_resource type="PackedScene" path="res://scenes/HUDIcons.tscn" id="10"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_floor"]
 size = Vector2(820, 20)
@@ -40,14 +42,14 @@ region_rect = Rect2(0, 0, 520, 20)
 
 [node name="PlatformSprite1" type="Sprite2D" parent="Art" unique_id=267173615]
 texture_repeat = 2
-position = Vector2(138, -2)
+position = Vector2(169, -15)
 texture = ExtResource("6")
 region_enabled = true
 region_rect = Rect2(0, 0, 180, 16)
 
 [node name="PlatformSprite2" type="Sprite2D" parent="Art" unique_id=385919563]
 texture_repeat = 2
-position = Vector2(300, 78)
+position = Vector2(360, 91)
 texture = ExtResource("6")
 region_enabled = true
 region_rect = Rect2(0, 0, 160, 16)
@@ -67,11 +69,11 @@ position = Vector2(238, 149)
 shape = SubResource("RectangleShape2D_floor")
 
 [node name="Platform1" type="CollisionShape2D" parent="World" unique_id=1956955930]
-position = Vector2(240, -113)
+position = Vector2(269, -123)
 shape = SubResource("RectangleShape2D_p180")
 
 [node name="Platform2" type="CollisionShape2D" parent="World" unique_id=865877445]
-position = Vector2(420, -30)
+position = Vector2(460, -17)
 shape = SubResource("RectangleShape2D_p160")
 
 [node name="Platform3" type="CollisionShape2D" parent="World" unique_id=2136511283]
@@ -81,10 +83,9 @@ shape = SubResource("RectangleShape2D_p120")
 [node name="Bounds" parent="." unique_id=1251057442 instance=ExtResource("5")]
 position = Vector2(352, 162)
 
-[node name="ArenaCamera" type="Camera2D" parent="."]
+[node name="ArenaCamera" type="Camera2D" parent="." unique_id=1156342039]
 position = Vector2(352, 190)
 zoom = Vector2(1.05, 1.05)
-priority = 10
 position_smoothing_enabled = true
 position_smoothing_speed = 6.0
 
@@ -93,20 +94,23 @@ position = Vector2(170, 342)
 
 [node name="Boss" parent="." unique_id=179378788 instance=ExtResource("3")]
 position = Vector2(470, 300)
-enable_swipe = false
+
+[node name="Servers" type="Node2D" parent="." unique_id=467135109]
+
+[node name="ServerA" parent="Servers" unique_id=735306789 instance=ExtResource("9")]
+position = Vector2(119, 128)
+
+[node name="ServerB" parent="Servers" unique_id=1927502783 instance=ExtResource("9")]
+position = Vector2(543, 171)
 
 [node name="PogoOrbL" parent="." unique_id=63800819 instance=ExtResource("8")]
-position = Vector2(330, 270)
+position = Vector2(225, 214)
 collision_layer = 2
 
 [node name="PogoOrbR" parent="." unique_id=602481314 instance=ExtResource("8")]
-position = Vector2(520, 270)
+position = Vector2(416, 214)
 collision_layer = 2
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=935258095]
 
-[node name="Stats" type="Label" parent="UI" unique_id=934233719]
-offset_left = 8.0
-offset_top = 8.0
-text = "HP:"
-script = ExtResource("7")
+[node name="HUD" parent="UI" unique_id=934233719 instance=ExtResource("10")]

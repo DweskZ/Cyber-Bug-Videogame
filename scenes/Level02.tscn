@@ -1,15 +1,16 @@
 [gd_scene format=3 uid="uid://bi7twe66v1dfl"]
 
-[ext_resource type="Script" path="res://scripts/level_entry.gd" id="1"]
-[ext_resource type="PackedScene" path="res://scenes/PlayerPlatformer.tscn" id="2"]
+[ext_resource type="Script" uid="uid://dy7frprvtj7dh" path="res://scripts/level_entry.gd" id="1"]
+[ext_resource type="PackedScene" uid="uid://brqlgxm2qu41f" path="res://scenes/PlayerPlatformer.tscn" id="2"]
 [ext_resource type="PackedScene" path="res://scenes/Background.tscn" id="3"]
-[ext_resource type="Texture2D" path="res://assets/platform_tex.png" id="4"]
+[ext_resource type="Texture2D" uid="uid://dhdqellqtgc58" path="res://assets/platform_tex.png" id="4"]
 [ext_resource type="PackedScene" path="res://scenes/Packet.tscn" id="5"]
 [ext_resource type="PackedScene" path="res://scenes/TransitionZone.tscn" id="6"]
-[ext_resource type="Script" path="res://scripts/hud.gd" id="7"]
-[ext_resource type="PackedScene" path="res://scenes/LevelBounds.tscn" id="8"]
+[ext_resource type="Script" uid="uid://d0k0jatf84o1" path="res://scripts/hud.gd" id="7"]
+[ext_resource type="PackedScene" uid="uid://tvy7rcn4br8o" path="res://scenes/LevelBounds.tscn" id="8"]
 [ext_resource type="PackedScene" path="res://scenes/EnemyWalker.tscn" id="9"]
 [ext_resource type="PackedScene" path="res://scenes/BounceOrb.tscn" id="10"]
+[ext_resource type="PackedScene" path="res://scenes/HUDIcons.tscn" id="11"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_floor"]
 size = Vector2(910, 20)
@@ -23,16 +24,16 @@ size = Vector2(180, 16)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_p120"]
 size = Vector2(120, 16)
 
-[node name="Level02" type="Node2D"]
+[node name="Level02" type="Node2D" unique_id=355787604]
 script = ExtResource("1")
 reset_run_on_enter = false
 
-[node name="BG" parent="." instance=ExtResource("3")]
+[node name="BG" parent="." unique_id=1943437955 instance=ExtResource("3")]
 
-[node name="Art" type="Node2D" parent="."]
+[node name="Art" type="Node2D" parent="." unique_id=1341921273]
 position = Vector2(183, 108)
 
-[node name="FloorSprite" type="Sprite2D" parent="Art"]
+[node name="FloorSprite" type="Sprite2D" parent="Art" unique_id=930240829]
 texture_repeat = 2
 position = Vector2(139, 269)
 scale = Vector2(1.75, 2.1)
@@ -40,99 +41,98 @@ texture = ExtResource("4")
 region_enabled = true
 region_rect = Rect2(0, 0, 520, 20)
 
-[node name="PlatformSprite1" type="Sprite2D" parent="Art"]
+[node name="PlatformSprite1" type="Sprite2D" parent="Art" unique_id=1430968350]
 texture_repeat = 2
 position = Vector2(-62, 108)
 texture = ExtResource("4")
 region_enabled = true
 region_rect = Rect2(0, 0, 140, 16)
 
-[node name="PlatformSprite2" type="Sprite2D" parent="Art"]
+[node name="PlatformSprite2" type="Sprite2D" parent="Art" unique_id=2054195925]
 texture_repeat = 2
 position = Vector2(160, 68)
 texture = ExtResource("4")
 region_enabled = true
 region_rect = Rect2(0, 0, 180, 16)
 
-[node name="PlatformSprite3" type="Sprite2D" parent="Art"]
+[node name="PlatformSprite3" type="Sprite2D" parent="Art" unique_id=834604670]
 texture_repeat = 2
-position = Vector2(360, 120)
+position = Vector2(332, 145)
 texture = ExtResource("4")
 region_enabled = true
 region_rect = Rect2(0, 0, 140, 16)
 
-[node name="PlatformSprite4" type="Sprite2D" parent="Art"]
+[node name="PlatformSprite4" type="Sprite2D" parent="Art" unique_id=30357992]
 texture_repeat = 2
 position = Vector2(520, 48)
 texture = ExtResource("4")
 region_enabled = true
 region_rect = Rect2(0, 0, 120, 16)
 
-[node name="World" type="StaticBody2D" parent="."]
+[node name="World" type="StaticBody2D" parent="." unique_id=235977392]
 position = Vector2(83, 216)
-collision_layer = 1
-collision_mask = 1
 
-[node name="Floor" type="CollisionShape2D" parent="World"]
+[node name="Floor" type="CollisionShape2D" parent="World" unique_id=1727812368]
 position = Vector2(238, 149)
 shape = SubResource("RectangleShape2D_floor")
 
-[node name="Platform1" type="CollisionShape2D" parent="World"]
+[node name="Platform1" type="CollisionShape2D" parent="World" unique_id=1989496965]
 position = Vector2(44, 0)
 shape = SubResource("RectangleShape2D_p140")
 
-[node name="Platform2" type="CollisionShape2D" parent="World"]
+[node name="Platform2" type="CollisionShape2D" parent="World" unique_id=2043216499]
 position = Vector2(266, -40)
 shape = SubResource("RectangleShape2D_p180")
 
-[node name="Platform3" type="CollisionShape2D" parent="World"]
-position = Vector2(470, 12)
+[node name="Platform3" type="CollisionShape2D" parent="World" unique_id=95511225]
+position = Vector2(431, 39)
 shape = SubResource("RectangleShape2D_p140")
 
-[node name="Platform4" type="CollisionShape2D" parent="World"]
+[node name="Platform4" type="CollisionShape2D" parent="World" unique_id=1442355357]
 position = Vector2(610, -60)
 shape = SubResource("RectangleShape2D_p120")
 
-[node name="Bounds" parent="." instance=ExtResource("8")]
+[node name="Bounds" parent="." unique_id=1116387121 instance=ExtResource("8")]
 position = Vector2(352, 162)
 
-[node name="Player" parent="." instance=ExtResource("2")]
+[node name="Player" parent="." unique_id=1985365925 instance=ExtResource("2")]
 position = Vector2(83, 342)
 
-[node name="EnemyA" parent="." instance=ExtResource("9")]
+[node name="EnemyA" parent="." unique_id=1665206627 instance=ExtResource("9")]
 position = Vector2(310, 342)
 
-[node name="EnemyB" parent="." instance=ExtResource("9")]
-position = Vector2(553, 228)
+[node name="EnemyB" parent="." unique_id=1317815424 instance=ExtResource("9")]
+position = Vector2(558, 206)
 
-[node name="PogoOrb" parent="." instance=ExtResource("10")]
-position = Vector2(520, 215)
+[node name="PogoOrb" parent="." unique_id=1195824680 instance=ExtResource("10")]
+position = Vector2(513, 195)
 collision_layer = 2
-collision_mask = 0
 
-[node name="Packet1" parent="." instance=ExtResource("5")]
+[node name="PogoOrb2" parent="." unique_id=312440769 instance=ExtResource("10")]
+position = Vector2(582, 146)
+collision_layer = 2
+
+[node name="Packet1" parent="." unique_id=857855517 instance=ExtResource("5")]
 position = Vector2(385, 112)
 
-[node name="Packet2" parent="." instance=ExtResource("5")]
-position = Vector2(660, 150)
+[node name="Packet2" parent="." unique_id=1257040507 instance=ExtResource("5")]
+position = Vector2(133, 183)
 
-[node name="Packet3" parent="." instance=ExtResource("5")]
+[node name="Packet3" parent="." unique_id=745497969 instance=ExtResource("5")]
 position = Vector2(730, 112)
 
-[node name="ToBoss" parent="." instance=ExtResource("6")]
+[node name="ToBoss" parent="." unique_id=1446177459 instance=ExtResource("6")]
 position = Vector2(835, 162)
 target_scene = "res://scenes/BossRoom.tscn"
 required_packets = 3
 
-[node name="UI" type="CanvasLayer" parent="."]
+[node name="UI" type="CanvasLayer" parent="." unique_id=927424131]
 
-[node name="Hint" type="Label" parent="UI"]
+[node name="Hint" type="Label" parent="UI" unique_id=1602950253]
 offset_left = 8.0
 offset_top = 8.0
 text = "Firewall Door (needs 3 packets)"
 
-[node name="Stats" type="Label" parent="UI"]
+[node name="HUD" parent="UI" unique_id=2095088979 instance=ExtResource("11")]
 offset_left = 8.0
 offset_top = 44.0
-text = "HP:"
-script = ExtResource("7")
