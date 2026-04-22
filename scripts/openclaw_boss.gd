@@ -23,11 +23,11 @@ const LASER_FRAMES := 4
 @export var max_hp := 25
 @export var move_speed := 70.0
 
-# Scale for 512px frames.
-@export var visual_scale := 0.12
+# Scale for 512px frames. Target: ~3x the player (player is 128px @ 0.25 scale).
+@export var visual_scale := 0.19
 
 # Visual node placement (tweak to align sprite with collision hitbox)
-@export var sprite_visual_pos := Vector2(0, -32)
+@export var sprite_visual_pos := Vector2(0, -18)
 
 # If true, compute stable offsets from alpha to keep the sprite anchored.
 # Implementation uses an intersection-rect anchor to avoid "weapon-driven" sliding.
@@ -465,7 +465,7 @@ func _disable_hitboxes() -> void:
 		slam_fx.visible = false
 
 func _enable_swipe() -> void:
-	swipe_area.position = Vector2(40.0 * float(_facing), 0)
+	swipe_area.position = Vector2(55.0 * float(_facing), 0)
 	swipe_shape.set_deferred("disabled", false)
 	swipe_area.set_deferred("monitoring", true)
 
@@ -478,7 +478,7 @@ func _enable_swipe() -> void:
 	t.parallel().tween_property(swipe_fx, "scale", Vector2(1.05, 1.05), swipe_active)
 
 func _enable_laser() -> void:
-	laser_area.position = Vector2(70.0 * float(_facing), -8)
+	laser_area.position = Vector2(95.0 * float(_facing), -10)
 	laser_shape.set_deferred("disabled", false)
 	laser_area.set_deferred("monitoring", true)
 
@@ -489,7 +489,7 @@ func _enable_laser() -> void:
 	t.tween_property(laser_fx, "modulate:a", 0.85, 0.06)
 
 func _enable_slam() -> void:
-	slam_area.position = Vector2(0, 20)
+	slam_area.position = Vector2(0, 30)
 	slam_shape.set_deferred("disabled", false)
 	slam_area.set_deferred("monitoring", true)
 
