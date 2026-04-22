@@ -117,7 +117,7 @@ func _ready() -> void:
 	slam_area.body_entered.connect(_on_hitbox_body_entered)
 
 	if enable_server_loop:
-		_start_server_cycle()
+		call_deferred("_start_server_cycle")
 
 func _physics_process(delta: float) -> void:
 	if _dying:
@@ -462,6 +462,8 @@ func _start_server_cycle() -> void:
 	if _servers.size() == 0:
 		# No placed servers in the scene, fallback to normal damage.
 		_damageable = true
+		# Scene might not be fully ready yet, retry next frame.
+		call_deferred("_start_server_cycle")
 		return
 	_reset_servers()
 
