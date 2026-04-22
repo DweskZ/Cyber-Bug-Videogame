@@ -2,19 +2,19 @@ extends Node2D
 
 # Quick visual harness to verify boss sprite anchoring without gameplay/physics noise.
 
-const SHEET_IDLE: Texture2D = preload("res://assets/spritesheets/openclwaboss_cleaned_padded/openclawboss_idle_strip.png")
-const SHEET_SWIPE: Texture2D = preload("res://assets/spritesheets/openclwaboss_cleaned_padded/openclawboss_swipe_strip.png")
-const SHEET_SLAM: Texture2D = preload("res://assets/spritesheets/openclwaboss_cleaned_padded/openclawboss_slam_strip.png")
-const SHEET_HURT: Texture2D = preload("res://assets/spritesheets/openclwaboss_cleaned_padded/openclawboss_hurt_strip.png")
-const SHEET_DEATH: Texture2D = preload("res://assets/spritesheets/openclwaboss_cleaned_padded/openclawboss_death_strip.png")
-const SHEET_LASER: Texture2D = preload("res://assets/spritesheets/openclwaboss_cleaned_padded/openclawboss_laser_strip.png")
+const SHEET_IDLE: Texture2D = preload("res://assets/spritesheets/openclawboss_processed/openclawboss_walk_strip.png")
+const SHEET_SWIPE: Texture2D = preload("res://assets/spritesheets/openclawboss_processed/openclawboss_attack_strip.png")
+const SHEET_SLAM: Texture2D = preload("res://assets/spritesheets/openclawboss_processed/openclawboss_slam_strip.png")
+const SHEET_HURT: Texture2D = preload("res://assets/spritesheets/openclawboss_processed/openclawboss_hurt_strip.png")
+const SHEET_DEATH: Texture2D = preload("res://assets/spritesheets/openclawboss_processed/openclawboss_death_strip.png")
+const SHEET_LASER: Texture2D = preload("res://assets/spritesheets/openclawboss_processed/openclawboss_laser_strip.png")
 
-const IDLE_FRAMES := 8
-const SWIPE_FRAMES := 8
+const IDLE_FRAMES := 4
+const SWIPE_FRAMES := 4
 const SLAM_FRAMES := 4
-const HURT_FRAMES := 3
-const DEATH_FRAMES := 7
-const LASER_FRAMES := 3
+const HURT_FRAMES := 4
+const DEATH_FRAMES := 4
+const LASER_FRAMES := 4
 
 @export var preview_scale := 0.10
 @export var fps_idle := 8.0
