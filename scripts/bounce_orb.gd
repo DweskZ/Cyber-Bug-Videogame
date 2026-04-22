@@ -10,9 +10,12 @@ const FRAMES := 4
 
 @onready var sprite: AnimatedSprite2D = $Sprite2D
 
+var _base_scale := Vector2.ONE
+
 func _ready() -> void:
 	if sprite == null:
 		return
+	_base_scale = sprite.scale
 	var frames := SpriteFrames.new()
 	SPRITESHEET_ANIM.add_strip(frames, "idle", SHEET_ORB, FRAME_W, FRAME_H, FRAMES, 10.0, true)
 	sprite.sprite_frames = frames
@@ -21,6 +24,6 @@ func _ready() -> void:
 func pulse() -> void:
 	if sprite == null:
 		return
-	sprite.scale = Vector2(1.10, 0.90)
+	sprite.scale = Vector2(_base_scale.x * 1.10, _base_scale.y * 0.90)
 	var t := create_tween()
-	t.tween_property(sprite, "scale", Vector2.ONE, 0.10).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	t.tween_property(sprite, "scale", _base_scale, 0.10).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
