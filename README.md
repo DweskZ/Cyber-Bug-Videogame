@@ -2,9 +2,6 @@
 
 Un platformer de acción hecho en **Godot 4** (demo para la meetup de **OpenClaw**). Pelea contra el boss “OpenClaw” y sobrevive el caos.
 
-## Capturas
-> Pendiente. (Si me pasas una screenshot/GIF, la dejo puesta aquí con lujo.)
-
 ## Requisitos
 - **Godot 4.x**
 
