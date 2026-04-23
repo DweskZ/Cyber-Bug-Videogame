@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dhdqellqtgc58"
-path="res://.godot/imported/platform_tex.png-87e8f8382f6de97a6dab199b1e715892.ctex"
+uid="uid://kseakykb3tip"
+path="res://.godot/imported/server_destroy_strip_512x128.png-f3a9ee72152308dc447ee336cec4cd6c.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/platform_tex.png"
-dest_files=["res://.godot/imported/platform_tex.png-87e8f8382f6de97a6dab199b1e715892.ctex"]
+source_file="res://assets/spritesheets/server_destroy_strip_512x128.png"
+dest_files=["res://.godot/imported/server_destroy_strip_512x128.png-f3a9ee72152308dc447ee336cec4cd6c.ctex"]
 
 [params]
 

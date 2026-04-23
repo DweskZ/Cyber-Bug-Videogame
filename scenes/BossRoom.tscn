@@ -6,7 +6,6 @@
 [ext_resource type="PackedScene" path="res://scenes/Background.tscn" id="4"]
 [ext_resource type="PackedScene" uid="uid://tvy7rcn4br8o" path="res://scenes/LevelBounds.tscn" id="5"]
 [ext_resource type="Texture2D" uid="uid://dhdqellqtgc58" path="res://assets/platform_tex.png" id="6"]
-[ext_resource type="Script" uid="uid://d0k0jatf84o1" path="res://scripts/hud.gd" id="7"]
 [ext_resource type="PackedScene" path="res://scenes/BounceOrb.tscn" id="8"]
 [ext_resource type="PackedScene" path="res://scenes/BossServer.tscn" id="9"]
 [ext_resource type="PackedScene" path="res://scenes/HUDIcons.tscn" id="10"]
@@ -81,7 +80,7 @@ position = Vector2(40, -45)
 shape = SubResource("RectangleShape2D_p120")
 
 [node name="Bounds" parent="." unique_id=1251057442 instance=ExtResource("5")]
-position = Vector2(352, 162)
+position = Vector2(360, 149)
 
 [node name="ArenaCamera" type="Camera2D" parent="." unique_id=1156342039]
 position = Vector2(352, 190)
@@ -114,3 +113,4 @@ collision_layer = 2
 [node name="UI" type="CanvasLayer" parent="." unique_id=935258095]
 
 [node name="HUD" parent="UI" unique_id=934233719 instance=ExtResource("10")]
+layout_mode = 3

@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dhdqellqtgc58"
-path="res://.godot/imported/platform_tex.png-87e8f8382f6de97a6dab199b1e715892.ctex"
+uid="uid://cm0t2ci8tqbj0"
+path="res://.godot/imported/openclawboss_death_strip.png-4b188d7e4e2cb7c6b397bcfbca42f213.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/platform_tex.png"
-dest_files=["res://.godot/imported/platform_tex.png-87e8f8382f6de97a6dab199b1e715892.ctex"]
+source_file="res://assets/spritesheets/openclawboss_processed/openclawboss_death_strip.png"
+dest_files=["res://.godot/imported/openclawboss_death_strip.png-4b188d7e4e2cb7c6b397bcfbca42f213.ctex"]
 
 [params]
 
