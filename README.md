@@ -1,6 +1,9 @@
-# Cyber Bug (Godot)
+# Cyber Bug
 
-Juego demo para la meetup de OpenClaw: un platformer de acción con un boss “OpenClaw”.
+Un platformer de acción hecho en **Godot 4** (demo para la meetup de **OpenClaw**). Pelea contra el boss “OpenClaw” y sobrevive el caos.
+
+## Capturas
+> Pendiente. (Si me pasas una screenshot/GIF, la dejo puesta aquí con lujo.)
 
 ## Requisitos
 - **Godot 4.x**
@@ -10,12 +13,21 @@ Juego demo para la meetup de OpenClaw: un platformer de acción con un boss “O
 2. Importa el proyecto seleccionando `project.godot`.
 3. Dale **Play**.
 
-## Controles (por ahora)
+## Controles
 - Movimiento: **A/D** o **Flechas**
 - Saltar: **Space**
 - Ataque: **J**
 - Down-attack: **S + J** (o **Abajo + J**)
 
-## Notas
-- Los assets generados/importados de Godot se manejan vía archivos `.import` (incluidos en el repo).
-- La carpeta `.godot/` no se versiona.
+## Estructura rápida
+- `assets/` → sprites, SVGs, backgrounds, spritesheets
+- `scenes/` → niveles y salas
+- `scripts/` (si aplica) → lógica del juego
+
+## Versionado (Godot)
+- Se incluyen los archivos `*.import`.
+- No se versiona `.godot/`.
+
+## Créditos
+- Engine: **Godot**
+- Demo tooling: **OpenClaw**
