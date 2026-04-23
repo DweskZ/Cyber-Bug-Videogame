@@ -1,6 +1,20 @@
 # Cyber Bug
 
+<p align="center">
+  <img src="docs/screenshots/cyber_bug.png" width="720" />
+</p>
+
 Un platformer de acción hecho en **Godot 4** (demo para la meetup de **OpenClaw**). Pelea contra el boss “OpenClaw” y sobrevive el caos.
+
+## Capturas
+
+<p align="center">
+  <img src="docs/screenshots/gameplay.jpg" width="920" />
+</p>
+
+<p align="center">
+  <img src="docs/screenshots/boss_art.png" width="920" />
+</p>
 
 ## Requisitos
 - **Godot 4.x**
@@ -11,9 +25,10 @@ Un platformer de acción hecho en **Godot 4** (demo para la meetup de **OpenClaw
 3. Dale **Play**.
 
 ## Controles
-- Movimiento y Salto: **Flechas**
-- Ataque: **Space**
-- Down-attack: (**Space** + **Abajo)
+- Movimiento: **Flechas** (o **A/D**)
+- Saltar: **Arriba** (o **W**)
+- Ataque: **Space** (o **Enter**)
+- Down-attack (en el aire): **Abajo + Space**
 
 ## Estructura rápida
 - `assets/` → sprites, SVGs, backgrounds, spritesheets
