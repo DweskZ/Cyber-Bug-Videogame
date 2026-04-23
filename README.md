@@ -11,10 +11,9 @@ Un platformer de acción hecho en **Godot 4** (demo para la meetup de **OpenClaw
 3. Dale **Play**.
 
 ## Controles
-- Movimiento: **A/D** o **Flechas**
-- Saltar: **Space**
-- Ataque: **J**
-- Down-attack: **S + J** (o **Abajo + J**)
+- Movimiento y Salto: **Flechas**
+- Ataque: **Space**
+- Down-attack: (**Space** + **Abajo)
 
 ## Estructura rápida
 - `assets/` → sprites, SVGs, backgrounds, spritesheets
